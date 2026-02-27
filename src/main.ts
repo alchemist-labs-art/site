@@ -155,17 +155,17 @@ function render(): void {
       <section class="info-col">
         <h1 class="wordmark">alchemist labs</h1>
         <p class="description">manifold: the next generation data ide.</p>
-
-        <!-- TODO: replace action="#" with your Mailchimp / Beehiiv / Buttondown endpoint -->
-        <form class="waitlist-form" action="#" method="POST">
-          <input
-            type="email"
-            name="email"
-            class="waitlist-input"
-            placeholder="your@email.com"
-            required
-            autocomplete="email"
-          />
+        <p class="description">vector: proprietary trading on prediction markets.</p>
+<!--        &lt;!&ndash; TODO: replace action="#" with your Mailchimp / Beehiiv / Buttondown endpoint &ndash;&gt;-->
+<!--        <form class="waitlist-form" action="#" method="POST">-->
+<!--          <input-->
+<!--            type="email"-->
+<!--            name="email"-->
+<!--            class="waitlist-input"-->
+<!--            placeholder="your@email.com"-->
+<!--            required-->
+<!--            autocomplete="email"-->
+<!--          />-->
           <button type="submit" class="waitlist-btn">join waitlist →</button>
         </form>
 
