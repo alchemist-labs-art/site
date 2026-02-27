@@ -146,13 +146,6 @@ function setupBgCanvas(): void {
 
 const STATE_KEY = 'al-anim-state'
 
-function isHardRefresh(): boolean {
-  const nav = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined
-  // 304 Not Modified has no body → encodedBodySize === 0 (soft refresh / F5)
-  // Full 200 response → encodedBodySize > 0 (hard refresh or first load)
-  return !!nav && nav.type === 'reload' && nav.encodedBodySize > 0
-}
-
 function saveState(): void {
   if (!flaskCells.length || !bgCells.length) return
   try {
@@ -236,12 +229,7 @@ function render(): void {
   // Background canvas (must come after placeholder is sized so getBoundingClientRect is accurate)
   setupBgCanvas()
 
-  // Restore animation state on soft refresh; hard refresh starts fresh
-  if (isHardRefresh()) {
-    sessionStorage.removeItem(STATE_KEY)
-  } else {
-    restoreState()
-  }
+  restoreState()
 
   window.addEventListener('pagehide', saveState)
   document.addEventListener('visibilitychange', () => { if (document.hidden) saveState() })
