@@ -1,0 +1,184 @@
+import { CANVAS_W, CANVAS_H, CELL, SQUARE, SVG_W, SVG_H, SVG_FLASK_PATH } from './flask.js';
+const BG_V = 22; // #161616 — dim square
+const ON_V = 224; // #e0e0e0 — bright
+function toColor(b) {
+    const v = Math.round(BG_V + Math.max(0, Math.min(1, b)) * (ON_V - BG_V));
+    return `rgb(${v},${v},${v})`;
+}
+// ── Flask cells ───────────────────────────────────────────────────────────────
+const FCOLS = Math.floor(CANVAS_W / CELL);
+const FROWS = Math.floor(CANVAS_H / CELL);
+let flaskCells = [];
+function buildFlaskPath() {
+    const scale = Math.min(CANVAS_W / SVG_W, CANVAS_H / SVG_H) * 0.88;
+    const ox = (CANVAS_W - SVG_W * scale) / 2;
+    const oy = (CANVAS_H - SVG_H * scale) / 2;
+    const out = new Path2D();
+    out.addPath(new Path2D(SVG_FLASK_PATH), new DOMMatrix([scale, 0, 0, scale, ox, oy]));
+    return out;
+}
+function initFlaskCells(ctx, path) {
+    flaskCells = Array.from({ length: FROWS }, (_, r) => Array.from({ length: FCOLS }, (_, c) => {
+        const isFlask = ctx.isPointInPath(path, c * CELL + SQUARE / 2, r * CELL + SQUARE / 2);
+        const initB = isFlask ? 0.6 + Math.random() * 0.4 : 0;
+        return { isFlask, brightness: initB, target: initB,
+            speed: 0.02 + Math.random() * 0.03, flipProb: 0.005 + Math.random() * 0.01 };
+    }));
+}
+function tickFlask() {
+    for (let r = 0; r < FROWS; r++) {
+        for (let c = 0; c < FCOLS; c++) {
+            const cell = flaskCells[r][c];
+            if (!cell.isFlask)
+                continue;
+            if (Math.random() < cell.flipProb) {
+                cell.target = 0.4 + Math.random() * 0.6;
+                cell.speed = 0.015 + Math.random() * 0.035;
+            }
+            cell.brightness += (cell.target - cell.brightness) * cell.speed;
+        }
+    }
+}
+// Draws flask cells onto the shared bg canvas at the given viewport offset.
+// No clearRect — drawBg() already redraws the full base grid each frame.
+function drawFlask(ctx, ox, oy) {
+    for (let r = 0; r < FROWS; r++) {
+        for (let c = 0; c < FCOLS; c++) {
+            const cell = flaskCells[r][c];
+            if (!cell.isFlask)
+                continue;
+            ctx.fillStyle = toColor(cell.brightness);
+            ctx.fillRect(ox + c * CELL, oy + r * CELL, SQUARE, SQUARE);
+        }
+    }
+}
+let bgCells = [];
+let bgCols = 0;
+let bgRows = 0;
+let bgCtx = null;
+let baseCanvas = null;
+function buildBaseGrid(w, h) {
+    const c = document.createElement('canvas');
+    c.width = w;
+    c.height = h;
+    const ctx = c.getContext('2d');
+    ctx.fillStyle = toColor(0); // #161616 squares
+    for (let r = 0; r < bgRows; r++)
+        for (let c2 = 0; c2 < bgCols; c2++)
+            ctx.fillRect(c2 * CELL, r * CELL, SQUARE, SQUARE);
+    return c;
+}
+function initBg(w, h) {
+    bgCols = Math.floor(w / CELL);
+    bgRows = Math.floor(h / CELL);
+    baseCanvas = buildBaseGrid(w, h);
+    const count = Math.round(bgCols * bgRows * 0.04); // 4% of cells animated
+    bgCells = Array.from({ length: count }, () => ({
+        col: Math.floor(Math.random() * bgCols),
+        row: Math.floor(Math.random() * bgRows),
+        brightness: Math.random() * 0.15,
+        target: Math.random() * 0.15,
+        speed: 0.003 + Math.random() * 0.007,
+    }));
+}
+function tickBg() {
+    for (const cell of bgCells) {
+        if (Math.random() < 0.002) {
+            if (cell.target > 0.02) {
+                cell.target = 0; // fade out
+            }
+            else {
+                cell.col = Math.floor(Math.random() * bgCols); // relocate + fade in
+                cell.row = Math.floor(Math.random() * bgRows);
+                cell.target = 0.08 + Math.random() * 0.10;
+            }
+            cell.speed = 0.003 + Math.random() * 0.007;
+        }
+        cell.brightness += (cell.target - cell.brightness) * cell.speed;
+    }
+}
+function drawBg() {
+    if (!bgCtx || !baseCanvas)
+        return;
+    bgCtx.drawImage(baseCanvas, 0, 0); // blit full grid in one call
+    for (const cell of bgCells) {
+        if (cell.brightness < 0.01)
+            continue;
+        bgCtx.fillStyle = toColor(cell.brightness);
+        bgCtx.fillRect(cell.col * CELL, cell.row * CELL, SQUARE, SQUARE);
+    }
+}
+function setupBgCanvas() {
+    const canvas = document.createElement('canvas');
+    canvas.id = 'bg-canvas';
+    document.body.insertBefore(canvas, document.getElementById('app'));
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    canvas.width = w;
+    canvas.height = h;
+    canvas.style.width = `${w}px`;
+    canvas.style.height = `${h}px`;
+    bgCtx = canvas.getContext('2d');
+    initBg(w, h);
+}
+// ── Render ────────────────────────────────────────────────────────────────────
+function render() {
+    const app = document.getElementById('app');
+    if (!app)
+        return;
+    app.innerHTML = `
+    <main class="hero">
+      <section class="flask-col">
+        <div id="flask-placeholder"></div>
+      </section>
+      <section class="info-col">
+        <h1 class="wordmark">alchemist labs</h1>
+        <p class="subhead">bringing data science to the AI age.</p>
+        <p class="description">manifold: the next generation data ide.</p>
+
+        <!-- TODO: replace action="#" with your Mailchimp / Beehiiv / Buttondown endpoint -->
+        <form class="waitlist-form" action="#" method="POST">
+          <input
+            type="email"
+            name="email"
+            class="waitlist-input"
+            placeholder="your@email.com"
+            required
+            autocomplete="email"
+          />
+          <button type="submit" class="waitlist-btn">join waitlist →</button>
+        </form>
+
+      </section>
+    </main>
+  `;
+    // Waitlist form — prevent navigation until action URL is wired up
+    document.querySelector('.waitlist-form')?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        // TODO: remove this handler once the form action is set to a real endpoint
+    });
+    // Size the placeholder so the hero layout reserves the same space as before
+    const placeholder = document.getElementById('flask-placeholder');
+    placeholder.style.width = `${CANVAS_W}px`;
+    placeholder.style.height = `${CANVAS_H}px`;
+    // Flask hit-test: isPointInPath requires a canvas context — use a temp offscreen
+    // canvas just for this, then discard it. All actual drawing goes to bgCtx.
+    const hitCanvas = document.createElement('canvas');
+    hitCanvas.width = CANVAS_W;
+    hitCanvas.height = CANVAS_H;
+    initFlaskCells(hitCanvas.getContext('2d'), buildFlaskPath());
+    // Background canvas (must come after placeholder is sized so getBoundingClientRect is accurate)
+    setupBgCanvas();
+    // Snap flask origin to the cell grid so flask cells align with bg cells
+    const rect = placeholder.getBoundingClientRect();
+    const flaskOriginX = Math.round(rect.left / CELL) * CELL;
+    const flaskOriginY = Math.round(rect.top / CELL) * CELL;
+    (function loop() {
+        tickBg();
+        drawBg();
+        tickFlask();
+        drawFlask(bgCtx, flaskOriginX, flaskOriginY);
+        requestAnimationFrame(loop);
+    })();
+}
+render();
