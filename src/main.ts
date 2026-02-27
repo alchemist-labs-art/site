@@ -154,8 +154,8 @@ function render(): void {
       </section>
       <section class="info-col">
         <h1 class="wordmark">alchemist labs</h1>
-        <p class="description">manifold: the next generation data ide.</p>
-        <p class="description">vector: proprietary trading on prediction markets.</p>
+        <p class="description"><strong>manifold</strong>: the next generation ide for data.</p>
+        <p class="description"><strong>vector</strong>: proprietary trading on prediction markets.</p>
 <!--        &lt;!&ndash; TODO: replace action="#" with your Mailchimp / Beehiiv / Buttondown endpoint &ndash;&gt;-->
 <!--        <form class="waitlist-form" action="#" method="POST">-->
 <!--          <input-->
@@ -166,8 +166,8 @@ function render(): void {
 <!--            required-->
 <!--            autocomplete="email"-->
 <!--          />-->
-          <button type="submit" class="waitlist-btn">join waitlist →</button>
-        </form>
+<!--          <button type="submit" class="waitlist-btn">join waitlist →</button>-->
+<!--        </form>-->
 
         <p class="contact">contact us at <a href="mailto:contact@alchemistlabs.org">contact@alchemistlabs.org</a></p>
 
