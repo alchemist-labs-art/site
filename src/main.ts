@@ -142,6 +142,46 @@ function setupBgCanvas(): void {
   initBg(w, h)
 }
 
+// ── State persistence ─────────────────────────────────────────────────────────
+
+const STATE_KEY = 'al-anim-state'
+
+function isHardRefresh(): boolean {
+  const nav = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined
+  // 304 Not Modified has no body → encodedBodySize === 0 (soft refresh / F5)
+  // Full 200 response → encodedBodySize > 0 (hard refresh or first load)
+  return !!nav && nav.type === 'reload' && nav.encodedBodySize > 0
+}
+
+function saveState(): void {
+  if (!flaskCells.length || !bgCells.length) return
+  try {
+    sessionStorage.setItem(STATE_KEY, JSON.stringify({
+      bgCols, bgRows,
+      flask: flaskCells.map(row => row.map(c => [+c.brightness.toFixed(3), +c.target.toFixed(3)])),
+      bg:    bgCells.map(c => [c.col, c.row, +c.brightness.toFixed(3), +c.target.toFixed(3)]),
+    }))
+  } catch { /* quota exceeded — skip silently */ }
+}
+
+function restoreState(): boolean {
+  const raw = sessionStorage.getItem(STATE_KEY)
+  if (!raw) return false
+  try {
+    const s = JSON.parse(raw)
+    if (s.bgCols !== bgCols || s.bgRows !== bgRows) return false
+    s.flask.forEach((row: [number, number][], r: number) =>
+      row.forEach(([b, t]: [number, number], c: number) => {
+        if (flaskCells[r]?.[c]) { flaskCells[r][c].brightness = b; flaskCells[r][c].target = t }
+      })
+    )
+    s.bg.forEach(([col, row, b, t]: [number, number, number, number], i: number) => {
+      if (bgCells[i]) { bgCells[i].col = col; bgCells[i].row = row; bgCells[i].brightness = b; bgCells[i].target = t }
+    })
+    return true
+  } catch { return false }
+}
+
 // ── Render ────────────────────────────────────────────────────────────────────
 
 function render(): void {
@@ -195,6 +235,16 @@ function render(): void {
 
   // Background canvas (must come after placeholder is sized so getBoundingClientRect is accurate)
   setupBgCanvas()
+
+  // Restore animation state on soft refresh; hard refresh starts fresh
+  if (isHardRefresh()) {
+    sessionStorage.removeItem(STATE_KEY)
+  } else {
+    restoreState()
+  }
+
+  window.addEventListener('pagehide', saveState)
+  document.addEventListener('visibilitychange', () => { if (document.hidden) saveState() })
 
   // Snap flask origin to the cell grid so flask cells align with bg cells
   const rect = placeholder.getBoundingClientRect()
