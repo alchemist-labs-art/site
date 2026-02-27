@@ -162,7 +162,7 @@ function render(): void {
             type="email"
             name="email"
             class="waitlist-input"
-            placeholder="contact@alchemistlabs.org"
+            placeholder="your@email.com"
             required
             autocomplete="email"
           />
