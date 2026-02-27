@@ -154,6 +154,24 @@ body {
   color: #000;
 }
 
+/* ── Contact ── */
+
+.contact {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-top: 0.5rem;
+}
+
+.contact a {
+  color: var(--text-dim);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.contact a:hover {
+  color: var(--text);
+}
+
 /* ── Responsive ── */
 
 @media (max-width: 640px) {

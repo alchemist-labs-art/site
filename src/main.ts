@@ -162,12 +162,14 @@ function render(): void {
             type="email"
             name="email"
             class="waitlist-input"
-            placeholder="your@email.com"
+            placeholder="contact@alchemistlabs.org"
             required
             autocomplete="email"
           />
           <button type="submit" class="waitlist-btn">join waitlist →</button>
         </form>
+
+        <p class="contact">contact us at <a href="mailto:contact@alchemistlabs.org">contact@alchemistlabs.org</a></p>
 
       </section>
     </main>
