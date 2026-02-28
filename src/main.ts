@@ -219,16 +219,12 @@ function render(): void {
   placeholder.style.width  = `${CANVAS_W}px`
   placeholder.style.height = `${CANVAS_H}px`
 
-  const showFlask = window.innerWidth >= 640
-
-  if (showFlask) {
-    // Flask hit-test: isPointInPath requires a canvas context — use a temp offscreen
-    // canvas just for this, then discard it. All actual drawing goes to bgCtx.
-    const hitCanvas = document.createElement('canvas')
-    hitCanvas.width  = CANVAS_W
-    hitCanvas.height = CANVAS_H
-    initFlaskCells(hitCanvas.getContext('2d')!, buildFlaskPath())
-  }
+  // Flask hit-test: isPointInPath requires a canvas context — use a temp offscreen
+  // canvas just for this, then discard it. All actual drawing goes to bgCtx.
+  const hitCanvas = document.createElement('canvas')
+  hitCanvas.width  = CANVAS_W
+  hitCanvas.height = CANVAS_H
+  initFlaskCells(hitCanvas.getContext('2d')!, buildFlaskPath())
 
   // Background canvas (must come after placeholder is sized so getBoundingClientRect is accurate)
   setupBgCanvas()
@@ -246,10 +242,8 @@ function render(): void {
   ;(function loop() {
     tickBg()
     drawBg()
-    if (showFlask) {
-      tickFlask()
-      drawFlask(bgCtx!, flaskOriginX, flaskOriginY)
-    }
+    tickFlask()
+    drawFlask(bgCtx!, flaskOriginX, flaskOriginY)
     requestAnimationFrame(loop)
   })()
 }
