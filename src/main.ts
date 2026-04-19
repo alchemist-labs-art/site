@@ -188,7 +188,6 @@ function render(): void {
       <section class="info-col">
         <h1 class="wordmark">alchemist labs</h1>
         <p class="description"><strong>manifold</strong>: the next generation ide for data.</p>
-        <p class="description"><strong>vector</strong>: proprietary trading on prediction markets.</p>
 <!--        &lt;!&ndash; TODO: replace action="#" with your Mailchimp / Beehiiv / Buttondown endpoint &ndash;&gt;-->
 <!--        <form class="waitlist-form" action="#" method="POST">-->
 <!--          <input-->
