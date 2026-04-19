@@ -186,7 +186,7 @@ function render(): void {
         <div id="flask-placeholder"></div>
       </section>
       <section class="info-col">
-        <h1 class="wordmark">alchemist labs</h1>
+        <h1 class="wordmark">alkera ai</h1>
         <p class="description"><strong>manifold</strong>: the next generation ide for data.</p>
 <!--        &lt;!&ndash; TODO: replace action="#" with your Mailchimp / Beehiiv / Buttondown endpoint &ndash;&gt;-->
 <!--        <form class="waitlist-form" action="#" method="POST">-->
@@ -201,7 +201,7 @@ function render(): void {
 <!--          <button type="submit" class="waitlist-btn">join waitlist →</button>-->
 <!--        </form>-->
 
-        <p class="contact">contact us at <a href="mailto:contact@alchemistlabs.org">contact@alchemistlabs.org</a></p>
+        <p class="contact">contact us at <a href="mailto:contact@alkera.ai">contact@alkera.ai</a></p>
 
       </section>
     </main>
