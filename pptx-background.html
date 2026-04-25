@@ -15,27 +15,26 @@
   </style>
 </head>
 <body>
-  <canvas id="bg" width="1920" height="1080"></canvas>
+  <div class="hint">dark</div>
+  <canvas id="bg-dark" width="1920" height="1080"></canvas>
+  <div class="hint">light</div>
+  <canvas id="bg-light" width="1920" height="1080"></canvas>
 
   <div class="controls">
     <button onclick="generate()">Regenerate</button>
-    <button onclick="download()">Download PNG</button>
+    <button onclick="download('dark')">Download Dark</button>
+    <button onclick="download('light')">Download Light</button>
   </div>
   <div class="hint">1920×1080 · 16:9</div>
 
   <script>
     const W = 1920, H = 1080;
     const CELL = 14, SQUARE = 12;
-    const BG_V = 22;
-
-    const canvas = document.getElementById('bg');
-    const ctx = canvas.getContext('2d');
-
     const cols = Math.floor(W / CELL);
     const rows = Math.floor(H / CELL);
 
-    function generate() {
-      ctx.fillStyle = `rgb(${BG_V - 7},${BG_V - 7},${BG_V - 7})`;
+    function renderGrid(ctx, baseV, gapV, dir) {
+      ctx.fillStyle = `rgb(${gapV},${gapV},${gapV})`;
       ctx.fillRect(0, 0, W, H);
 
       const waveX = W * (0.1 + Math.random() * 0.8);
@@ -44,12 +43,13 @@
       for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
           const px = c * CELL + SQUARE / 2;
-
           const dist = Math.abs(px - waveX);
           const wave = Math.max(0, 1 - dist / spread);
-          const bump = wave * (2 + Math.random() * 3);
-          const noise = (Math.random() - 0.5) * 2.5;
-          const v = Math.round(Math.max(BG_V - 1, Math.min(BG_V + 7, BG_V + bump + noise)));
+          const bump = wave * (2 + Math.random() * 3) * dir;
+          const noise = (Math.random() - 0.5) * 2.5 * dir;
+          const v = Math.round(dir > 0
+            ? Math.max(baseV - 1, Math.min(baseV + 7, baseV + bump + noise))
+            : Math.min(baseV + 1, Math.max(baseV - 7, baseV + bump + noise)));
 
           ctx.fillStyle = `rgb(${v},${v},${v})`;
           ctx.fillRect(c * CELL, r * CELL, SQUARE, SQUARE);
@@ -57,10 +57,15 @@
       }
     }
 
-    function download() {
+    function generate() {
+      renderGrid(document.getElementById('bg-dark').getContext('2d'), 22, 15, 1);
+      renderGrid(document.getElementById('bg-light').getContext('2d'), 232, 245, -1);
+    }
+
+    function download(mode) {
       const a = document.createElement('a');
-      a.download = 'alkera-pptx-background.png';
-      a.href = canvas.toDataURL('image/png');
+      a.download = `alkera-pptx-background-${mode}.png`;
+      a.href = document.getElementById(`bg-${mode}`).toDataURL('image/png');
       a.click();
     }
 
