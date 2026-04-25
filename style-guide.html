@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Alkera AI — Style &amp; Branding Guide</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #0f0f0f;
@@ -321,6 +324,128 @@
 
     .guideline-col.do ul li::before { content: "+"; color: #6b6; }
     .guideline-col.dont ul li::before { content: "—"; color: #b66; }
+
+    /* ── Pitch deck / Document specimens ── */
+
+    .deck-specimen {
+      background: var(--bg-elevated);
+      border: 1px solid var(--text-dim);
+      padding: 2rem 2.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .deck-specimen .deck-label {
+      font-size: 0.6rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 1rem;
+      font-family: 'Courier New', monospace;
+    }
+
+    .font-inter {
+      font-family: 'Inter', -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+    }
+
+    .deck-title {
+      font-size: 2.2rem;
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+
+    .deck-subtitle {
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--text-dim);
+      line-height: 1.4;
+    }
+
+    .deck-h2 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: -0.01em;
+      margin-bottom: 0.5rem;
+    }
+
+    .deck-body {
+      font-size: 0.95rem;
+      font-weight: 400;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    .deck-caption {
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    .deck-stat {
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+
+    .deck-stat-label {
+      font-size: 0.8rem;
+      font-weight: 400;
+      color: var(--text-dim);
+      margin-top: 0.25rem;
+    }
+
+    .deck-wordmark {
+      font-family: 'Courier New', monospace;
+      font-weight: 300;
+      font-size: 1.5rem;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    .context-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    @media (max-width: 500px) {
+      .context-grid { grid-template-columns: 1fr; }
+    }
+
+    .context-card {
+      border: 1px solid var(--text-dim);
+      padding: 1.25rem;
+    }
+
+    .context-card h4 {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+      font-weight: 400;
+      margin-bottom: 0.5rem;
+      font-family: 'Courier New', monospace;
+    }
+
+    .context-card .font-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+
+    .context-card .font-detail {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
   </style>
 </head>
 <body>
@@ -612,6 +737,203 @@
           <li>Break the monochrome grid aesthetic</li>
         </ul>
       </div>
+    </div>
+  </section>
+
+  <!-- ── PITCH DECK & PRESENTATIONS ── -->
+  <section>
+    <h2>Pitch Deck &amp; Presentations</h2>
+
+    <div class="meta" style="font-size: 0.7rem; color: var(--text-dim); line-height: 1.8; margin-bottom: 1.5rem;">
+      Monospace works for product UI but reads as raw/unfinished at projection scale.<br>
+      For decks, investor materials, and conference slides, pair <strong style="color:var(--text)">Inter</strong> (body/headlines)
+      with <strong style="color:var(--text)">Courier New</strong> (wordmark, code snippets, product names only).
+    </div>
+
+    <div class="context-grid" style="margin-top: 0; margin-bottom: 1.5rem;">
+      <div class="context-card">
+        <h4>Headlines &amp; Body</h4>
+        <div class="font-name font-inter">Inter</div>
+        <div class="font-detail">
+          Weights: 400 (body), 500 (emphasis), 600 (headlines), 700 (stats/metrics)<br>
+          Free via Google Fonts. Variable weight supported.<br>
+          Geometric, neutral, high x-height — reads well on screens and projectors.
+        </div>
+      </div>
+      <div class="context-card">
+        <h4>Brand Signature</h4>
+        <div class="font-name" style="font-family: 'Courier New', monospace; font-weight: 300;">Courier New</div>
+        <div class="font-detail">
+          Use only for: the "alkera ai" wordmark, product names ("manifold"),<br>
+          code snippets, and technical callouts.<br>
+          Preserves brand DNA without making slides feel like a terminal.
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide specimens -->
+    <div class="deck-specimen">
+      <div class="deck-label">title slide</div>
+      <div class="deck-wordmark">alkera ai</div>
+      <div class="deck-title font-inter" style="margin-top: 0.75rem;">The Next Generation<br>IDE for Data</div>
+      <div class="deck-subtitle font-inter">Series A · April 2026</div>
+    </div>
+
+    <div class="deck-specimen">
+      <div class="deck-label">content slide</div>
+      <div class="deck-h2 font-inter">Why existing tools fall short</div>
+      <div class="deck-body font-inter">
+        Data teams lose 40% of their time context-switching between notebooks, SQL editors, and dashboards. <span style="font-family:'Courier New',monospace; color:var(--text);">manifold</span> unifies these workflows into a single reactive environment.
+      </div>
+    </div>
+
+    <div class="deck-specimen">
+      <div class="deck-label">metrics slide</div>
+      <div style="display: flex; gap: 3rem; flex-wrap: wrap;">
+        <div>
+          <div class="deck-stat font-inter">3.2x</div>
+          <div class="deck-stat-label font-inter">faster query iteration</div>
+        </div>
+        <div>
+          <div class="deck-stat font-inter">40%</div>
+          <div class="deck-stat-label font-inter">less context switching</div>
+        </div>
+        <div>
+          <div class="deck-stat font-inter">12k</div>
+          <div class="deck-stat-label font-inter">waitlist signups</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top: 1rem;">
+      <div class="meta" style="font-size: 0.65rem; color: var(--text-dim); line-height: 2;">
+        <strong style="color: var(--text)">slide rules</strong><br>
+        Background: solid #0f0f0f (dark) or #f5f5f5 (light). No gradients.<br>
+        The grid texture may be used as a subtle background on title/divider slides only — never behind body text.<br>
+        One idea per slide. Generous whitespace. Left-aligned, never centered body text.<br>
+        Stats: Inter 700 at large scale, greyscale only. No pie charts — use bar/line if needed.<br>
+        Flask icon: top-left corner of every slide at 24px, acts as a logo mark.<br>
+        Aspect ratio: 16:9. Margins: 80px minimum on all sides.<br><br>
+
+        <strong style="color: var(--text)">color in decks</strong><br>
+        The greyscale-only rule still applies. If you must highlight something, use --text (white/black) against --text-dim (grey).<br>
+        For charts/diagrams, you may use one accent: <span style="color: #7a7a7a; font-weight: 600;">#7a7a7a</span> as a mid-grey differentiator — never introduce hue.<br><br>
+
+        <strong style="color: var(--text)">what not to do</strong><br>
+        No all-monospace slides. No terminal aesthetic for investor content.<br>
+        No stock photos. No clip art. Diagrams should use the grid-cell style or simple line art.<br>
+        No slide transitions or animations beyond a simple fade.
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FORMAL DOCUMENTS ── -->
+  <section>
+    <h2>Formal Documents &amp; Print</h2>
+
+    <div class="meta" style="font-size: 0.7rem; color: var(--text-dim); line-height: 1.8; margin-bottom: 1.5rem;">
+      Contracts, white papers, proposals, and letterhead follow the same Inter + Courier New pairing.<br>
+      Print defaults to light mode. Documents should feel clean and authoritative, not techy.
+    </div>
+
+    <div class="deck-specimen">
+      <div class="deck-label">document header</div>
+      <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--text-dim);">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" width="20" height="24">
+          <path d="M 115 30 V 90 L 165 200 A 10 10 0 0 1 155 210 H 45 A 10 10 0 0 1 35 200 L 60 145"
+                fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <span class="deck-wordmark" style="font-size: 1rem;">alkera ai</span>
+      </div>
+      <div class="deck-h2 font-inter" style="font-size: 1.1rem;">Technical White Paper: Reactive Data Environments</div>
+      <div class="deck-caption font-inter" style="margin-top: 0.25rem;">Alkera AI Research · April 2026 · Confidential</div>
+      <div class="deck-body font-inter" style="margin-top: 1rem; font-size: 0.85rem;">
+        Abstract — This paper presents the design principles behind <span style="font-family:'Courier New',monospace;">manifold</span>, a reactive IDE that unifies query authoring, data exploration, and pipeline orchestration into a single environment. We demonstrate a 3.2x improvement in query iteration speed compared to traditional notebook workflows.
+      </div>
+    </div>
+
+    <div style="margin-top: 1rem;">
+      <div class="meta" style="font-size: 0.65rem; color: var(--text-dim); line-height: 2;">
+        <strong style="color: var(--text)">document typography</strong><br>
+        Title: Inter 600, 18–24pt. Body: Inter 400, 10–11pt, line-height 1.6.<br>
+        Captions/footnotes: Inter 400, 8–9pt, color --text-dim.<br>
+        Code/product names: Courier New inline, same size as surrounding body text.<br>
+        Page headers: flask icon (16px) + "alkera ai" wordmark in Courier New, separated by a 1px rule.<br><br>
+
+        <strong style="color: var(--text)">layout</strong><br>
+        Paper size: A4 or US Letter. Margins: 1 inch / 25mm all sides.<br>
+        Single column for letters/proposals. Two column acceptable for white papers.<br>
+        Page numbers: bottom-right, Inter 400, 8pt.<br>
+        No headers on the first page.<br><br>
+
+        <strong style="color: var(--text)">print color</strong><br>
+        Always print in light mode: #1a1a1a text on white paper.<br>
+        The grid texture should not appear in print documents — it's a screen-only element.<br>
+        Flask icon prints as a stroke outline in black.
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CONTEXT USAGE SUMMARY ── -->
+  <section>
+    <h2>When to Use What</h2>
+
+    <div style="overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse; font-size: 0.7rem; color: var(--text-dim);">
+        <thead>
+          <tr style="border-bottom: 1px solid var(--text-dim); text-align: left;">
+            <th style="padding: 0.5rem 1rem 0.5rem 0; font-weight: 400; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.6rem;">Context</th>
+            <th style="padding: 0.5rem 1rem; font-weight: 400; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.6rem;">Primary Font</th>
+            <th style="padding: 0.5rem 1rem; font-weight: 400; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.6rem;">Monospace</th>
+            <th style="padding: 0.5rem 1rem; font-weight: 400; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.6rem;">Grid Texture</th>
+            <th style="padding: 0.5rem 1rem; font-weight: 400; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.6rem;">Default Mode</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom: 1px solid rgba(136,136,136,0.2);">
+            <td style="padding: 0.5rem 1rem 0.5rem 0; color: var(--text);">Website / Product</td>
+            <td style="padding: 0.5rem 1rem;">Courier New</td>
+            <td style="padding: 0.5rem 1rem;">Everything</td>
+            <td style="padding: 0.5rem 1rem;">Yes, animated</td>
+            <td style="padding: 0.5rem 1rem;">Dark</td>
+          </tr>
+          <tr style="border-bottom: 1px solid rgba(136,136,136,0.2);">
+            <td style="padding: 0.5rem 1rem 0.5rem 0; color: var(--text);">Pitch Deck</td>
+            <td style="padding: 0.5rem 1rem;">Inter</td>
+            <td style="padding: 0.5rem 1rem;">Wordmark + product names only</td>
+            <td style="padding: 0.5rem 1rem;">Title slides only, static</td>
+            <td style="padding: 0.5rem 1rem;">Dark</td>
+          </tr>
+          <tr style="border-bottom: 1px solid rgba(136,136,136,0.2);">
+            <td style="padding: 0.5rem 1rem 0.5rem 0; color: var(--text);">Conference Slides</td>
+            <td style="padding: 0.5rem 1rem;">Inter</td>
+            <td style="padding: 0.5rem 1rem;">Wordmark + code snippets</td>
+            <td style="padding: 0.5rem 1rem;">Backgrounds OK, subtle</td>
+            <td style="padding: 0.5rem 1rem;">Dark</td>
+          </tr>
+          <tr style="border-bottom: 1px solid rgba(136,136,136,0.2);">
+            <td style="padding: 0.5rem 1rem 0.5rem 0; color: var(--text);">White Paper / Report</td>
+            <td style="padding: 0.5rem 1rem;">Inter</td>
+            <td style="padding: 0.5rem 1rem;">Inline code + product names</td>
+            <td style="padding: 0.5rem 1rem;">No</td>
+            <td style="padding: 0.5rem 1rem;">Light</td>
+          </tr>
+          <tr style="border-bottom: 1px solid rgba(136,136,136,0.2);">
+            <td style="padding: 0.5rem 1rem 0.5rem 0; color: var(--text);">Contracts / Letters</td>
+            <td style="padding: 0.5rem 1rem;">Inter</td>
+            <td style="padding: 0.5rem 1rem;">Letterhead wordmark only</td>
+            <td style="padding: 0.5rem 1rem;">No</td>
+            <td style="padding: 0.5rem 1rem;">Light</td>
+          </tr>
+          <tr>
+            <td style="padding: 0.5rem 1rem 0.5rem 0; color: var(--text);">Social / Marketing</td>
+            <td style="padding: 0.5rem 1rem;">Inter or Courier New</td>
+            <td style="padding: 0.5rem 1rem;">Depends on context</td>
+            <td style="padding: 0.5rem 1rem;">Yes, as brand texture</td>
+            <td style="padding: 0.5rem 1rem;">Dark</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </section>
 
