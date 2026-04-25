@@ -47,9 +47,9 @@
 
           const dist = Math.abs(px - waveX);
           const wave = Math.max(0, 1 - dist / spread);
-          const bump = wave * (8 + Math.random() * 14);
-          const noise = (Math.random() - 0.5) * 12;
-          const v = Math.round(Math.max(BG_V - 2, Math.min(BG_V + 35, BG_V + bump + noise)));
+          const bump = wave * (2 + Math.random() * 3);
+          const noise = (Math.random() - 0.5) * 2.5;
+          const v = Math.round(Math.max(BG_V - 1, Math.min(BG_V + 7, BG_V + bump + noise)));
 
           ctx.fillStyle = `rgb(${v},${v},${v})`;
           ctx.fillRect(c * CELL, r * CELL, SQUARE, SQUARE);
