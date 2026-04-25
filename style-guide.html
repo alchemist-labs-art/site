@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alkera AI — Style &amp; Branding Guide</title>
+  <style>
+    :root {
+      --bg: #0f0f0f;
+      --bg-elevated: #161616;
+      --text: #e0e0e0;
+      --text-dim: #888888;
+      --accent-hover: #000000;
+      --border: #e0e0e0;
+      --swatch-size: 100px;
+      --radius: 0;
+    }
+
+    [data-theme="light"] {
+      --bg: #f5f5f5;
+      --bg-elevated: #e8e8e8;
+      --text: #1a1a1a;
+      --text-dim: #666666;
+      --accent-hover: #ffffff;
+      --border: #1a1a1a;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Courier New', monospace;
+      padding: 3rem 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* ── Theme toggle ── */
+
+    .theme-toggle {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: transparent;
+      border: 1px solid var(--text);
+      color: var(--text);
+      font-family: 'Courier New', monospace;
+      font-size: 0.75rem;
+      padding: 0.35rem 0.75rem;
+      cursor: pointer;
+      letter-spacing: 0.03em;
+      transition: background 0.15s, color 0.15s;
+      z-index: 10;
+    }
+
+    .theme-toggle:hover {
+      background: var(--text);
+      color: var(--bg);
+    }
+
+    /* ── Layout ── */
+
+    header { margin-bottom: 3rem; }
+
+    header h1 {
+      font-weight: 300;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    header p {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      letter-spacing: 0.05em;
+    }
+
+    section {
+      margin-bottom: 3rem;
+    }
+
+    h2 {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-dim);
+      border-bottom: 1px solid var(--text-dim);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1.5rem;
+      font-weight: 400;
+    }
+
+    /* ── Color swatches ── */
+
+    .swatches {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .swatch {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .swatch-block {
+      width: 100%;
+      height: var(--swatch-size);
+      border: 1px solid var(--text-dim);
+    }
+
+    .swatch-label {
+      font-size: 0.75rem;
+      color: var(--text);
+    }
+
+    .swatch-hex {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+    }
+
+    .swatch-var {
+      font-size: 0.65rem;
+      color: var(--text-dim);
+    }
+
+    /* ── Typography specimens ── */
+
+    .type-specimen {
+      margin-bottom: 1.75rem;
+    }
+
+    .type-specimen .sample {
+      margin-bottom: 0.35rem;
+    }
+
+    .type-specimen .meta {
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    .spec-wordmark {
+      font-weight: 300;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .spec-tagline {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      letter-spacing: 0.05em;
+    }
+
+    .spec-body {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    .spec-small {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+
+    /* ── Components ── */
+
+    .component-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      align-items: flex-end;
+    }
+
+    .component-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .component-card .label {
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .demo-btn {
+      background: transparent;
+      border: 1px solid var(--text);
+      color: var(--text);
+      font-family: 'Courier New', monospace;
+      font-size: 0.8rem;
+      padding: 0.35rem 0.75rem;
+      cursor: pointer;
+      letter-spacing: 0.03em;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .demo-btn:hover {
+      background: var(--text);
+      color: var(--bg);
+    }
+
+    .demo-input {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--text-dim);
+      color: var(--text);
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      padding: 0.4rem 0;
+      outline: none;
+      width: 220px;
+      transition: border-color 0.15s;
+    }
+
+    .demo-input::placeholder { color: var(--text-dim); }
+    .demo-input:focus { border-bottom-color: var(--text); }
+
+    .demo-link {
+      color: var(--text-dim);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      font-size: 0.75rem;
+      transition: color 0.15s;
+    }
+
+    .demo-link:hover { color: var(--text); }
+
+    /* ── Spacing & Grid ── */
+
+    .spacing-row {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .spacing-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .spacing-box {
+      background: var(--text-dim);
+      opacity: 0.4;
+    }
+
+    .spacing-label {
+      font-size: 0.6rem;
+      color: var(--text-dim);
+    }
+
+    /* ── Flask icon ── */
+
+    .icon-demo {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .icon-demo svg path {
+      stroke: var(--text);
+      transition: stroke 0.3s;
+    }
+
+    /* ── Grid animation preview ── */
+
+    .grid-preview {
+      display: grid;
+      gap: 2px;
+      width: fit-content;
+    }
+
+    .grid-cell {
+      width: 12px;
+      height: 12px;
+    }
+
+    /* ── Do/Don't ── */
+
+    .guidelines {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 500px) {
+      .guidelines { grid-template-columns: 1fr; }
+    }
+
+    .guideline-col h3 {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+      font-weight: 400;
+    }
+
+    .guideline-col.do h3 { color: #6b6; }
+    .guideline-col.dont h3 { color: #b66; }
+
+    .guideline-col ul {
+      list-style: none;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      line-height: 1.8;
+    }
+
+    .guideline-col ul li::before {
+      margin-right: 0.5rem;
+    }
+
+    .guideline-col.do ul li::before { content: "+"; color: #6b6; }
+    .guideline-col.dont ul li::before { content: "—"; color: #b66; }
+  </style>
+</head>
+<body>
+  <button class="theme-toggle" onclick="toggleTheme()">light mode</button>
+
+  <header>
+    <h1>alkera ai</h1>
+    <p>style &amp; branding guide</p>
+  </header>
+
+  <!-- ── COLORS ── -->
+  <section>
+    <h2>Color Palette — Dark Mode</h2>
+    <div class="swatches" id="dark-swatches">
+      <div class="swatch">
+        <div class="swatch-block" style="background:#0f0f0f"></div>
+        <span class="swatch-label">Background</span>
+        <span class="swatch-hex">#0f0f0f · rgb(15,15,15)</span>
+        <span class="swatch-var">--bg</span>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#161616"></div>
+        <span class="swatch-label">Elevated / Grid Cell</span>
+        <span class="swatch-hex">#161616 · rgb(22,22,22)</span>
+        <span class="swatch-var">--bg-elevated</span>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#888888"></div>
+        <span class="swatch-label">Text Dim / Secondary</span>
+        <span class="swatch-hex">#888888 · rgb(136,136,136)</span>
+        <span class="swatch-var">--text-dim</span>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#e0e0e0"></div>
+        <span class="swatch-label">Text / Primary</span>
+        <span class="swatch-hex">#e0e0e0 · rgb(224,224,224)</span>
+        <span class="swatch-var">--text</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Color Palette — Light Mode</h2>
+    <div class="swatches">
+      <div class="swatch">
+        <div class="swatch-block" style="background:#f5f5f5"></div>
+        <span class="swatch-label">Background</span>
+        <span class="swatch-hex">#f5f5f5 · rgb(245,245,245)</span>
+        <span class="swatch-var">--bg</span>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#e8e8e8"></div>
+        <span class="swatch-label">Elevated / Grid Cell</span>
+        <span class="swatch-hex">#e8e8e8 · rgb(232,232,232)</span>
+        <span class="swatch-var">--bg-elevated</span>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#666666"></div>
+        <span class="swatch-label">Text Dim / Secondary</span>
+        <span class="swatch-hex">#666666 · rgb(102,102,102)</span>
+        <span class="swatch-var">--text-dim</span>
+      </div>
+      <div class="swatch">
+        <div class="swatch-block" style="background:#1a1a1a"></div>
+        <span class="swatch-label">Text / Primary</span>
+        <span class="swatch-hex">#1a1a1a · rgb(26,26,26)</span>
+        <span class="swatch-var">--text</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── TYPOGRAPHY ── -->
+  <section>
+    <h2>Typography</h2>
+
+    <div class="type-specimen">
+      <div class="sample spec-wordmark">alkera ai</div>
+      <div class="meta">
+        Wordmark · Courier New, monospace · weight 300 · clamp(2.5rem, 5vw, 4.5rem) · letter-spacing -0.02em
+      </div>
+    </div>
+
+    <div class="type-specimen">
+      <div class="sample spec-tagline">building the future of data intelligence</div>
+      <div class="meta">
+        Tagline · Courier New, monospace · 0.8rem · letter-spacing 0.05em · color: --text-dim
+      </div>
+    </div>
+
+    <div class="type-specimen">
+      <div class="sample spec-body"><strong>manifold</strong>: the next generation ide for data. We build tools that transform how teams interact with their data infrastructure.</div>
+      <div class="meta">
+        Body · Courier New, monospace · 0.85rem · line-height 1.5 · color: --text-dim
+      </div>
+    </div>
+
+    <div class="type-specimen">
+      <div class="sample spec-small">contact us at contact@alkera.ai</div>
+      <div class="meta">
+        Small / Contact · Courier New, monospace · 0.75rem · color: --text-dim
+      </div>
+    </div>
+
+    <div class="type-specimen" style="margin-top: 2rem;">
+      <div class="meta" style="line-height: 2.2;">
+        Font stack: <strong>'Courier New', monospace</strong><br>
+        All text is set in a single monospace typeface.<br>
+        Hierarchy is created through size, weight, and opacity — never through font changes.<br>
+        Lowercase only. No capitalization except where grammatically required.
+      </div>
+    </div>
+  </section>
+
+  <!-- ── COMPONENTS ── -->
+  <section>
+    <h2>UI Components</h2>
+
+    <div class="component-row">
+      <div class="component-card">
+        <span class="label">Primary Button</span>
+        <button class="demo-btn">join waitlist →</button>
+      </div>
+
+      <div class="component-card">
+        <span class="label">Text Input</span>
+        <input type="text" class="demo-input" placeholder="your@email.com" />
+      </div>
+
+      <div class="component-card">
+        <span class="label">Link</span>
+        <a href="#" class="demo-link" onclick="return false">contact@alkera.ai</a>
+      </div>
+    </div>
+
+    <div style="margin-top: 1.5rem">
+      <div class="meta" style="font-size: 0.65rem; color: var(--text-dim); line-height: 1.8;">
+        Buttons: transparent bg, 1px solid border, 0px border-radius. Hover inverts fill.<br>
+        Inputs: border-bottom only, no background. Focus brightens border to --text.<br>
+        Links: underline with 3px offset. Hover brightens to --text.
+      </div>
+    </div>
+  </section>
+
+  <!-- ── ICON / LOGO ── -->
+  <section>
+    <h2>Logo / Flask Icon</h2>
+
+    <div class="icon-demo">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" width="80" height="96">
+        <path d="M 115 30 V 90 L 165 200 A 10 10 0 0 1 155 210 H 45 A 10 10 0 0 1 35 200 L 60 145"
+              fill="none" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" width="48" height="58">
+        <path d="M 115 30 V 90 L 165 200 A 10 10 0 0 1 155 210 H 45 A 10 10 0 0 1 35 200 L 60 145"
+              fill="none" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" width="24" height="29">
+        <path d="M 115 30 V 90 L 165 200 A 10 10 0 0 1 155 210 H 45 A 10 10 0 0 1 35 200 L 60 145"
+              fill="none" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </div>
+
+    <div style="margin-top: 1rem">
+      <div class="meta" style="font-size: 0.65rem; color: var(--text-dim); line-height: 1.8;">
+        Open flask silhouette, stroke only, no fill. Matches --text color.<br>
+        Used as favicon (SVG) and animated grid fill on the main site.<br>
+        Minimum clear space: 1x stroke-width around all sides.
+      </div>
+    </div>
+  </section>
+
+  <!-- ── GRID AESTHETIC ── -->
+  <section>
+    <h2>Grid Aesthetic — Visual Language</h2>
+
+    <div style="display: flex; gap: 2.5rem; flex-wrap: wrap; align-items: flex-start;">
+      <div>
+        <div class="meta" style="font-size: 0.65rem; color: var(--text-dim); margin-bottom: 0.5rem;">background grid (subtle)</div>
+        <div class="grid-preview" id="grid-demo-bg" style="grid-template-columns: repeat(12, 12px);"></div>
+      </div>
+      <div>
+        <div class="meta" style="font-size: 0.65rem; color: var(--text-dim); margin-bottom: 0.5rem;">flask cells (bright, active)</div>
+        <div class="grid-preview" id="grid-demo-flask" style="grid-template-columns: repeat(12, 12px);"></div>
+      </div>
+    </div>
+
+    <div style="margin-top: 1.5rem">
+      <div class="meta" style="font-size: 0.65rem; color: var(--text-dim); line-height: 2;">
+        <strong style="color: var(--text)">structure</strong><br>
+        The entire viewport is covered by a uniform grid of squares.<br>
+        Cell pitch: 14px (12px square + 2px gap). The gap is the page background showing through.<br>
+        Grid aligns to viewport origin (0,0) — all elements snap to the grid.<br><br>
+
+        <strong style="color: var(--text)">background layer</strong><br>
+        Base cells render at #161616 (dark mode) — barely visible against #0f0f0f background.<br>
+        ~4% of cells are randomly selected as "alive" and pulse slowly between brightness 0–0.15.<br>
+        Alive cells occasionally relocate: fade out → pick new position → fade in.<br>
+        Animation speed: 0.003–0.01 interpolation per frame. Tick probability: 0.2%.<br>
+        Effect: a quiet, breathing digital texture across the full viewport.<br><br>
+
+        <strong style="color: var(--text)">flask layer</strong><br>
+        The flask icon is rasterized into the grid — cells inside the SVG path light up.<br>
+        Brightness range: 0.4–1.0 (much brighter than background).<br>
+        Each cell has independent flicker: random target brightness, random interpolation speed.<br>
+        Flip probability: 0.5–1.5% per frame. Speed: 0.015–0.05 per frame.<br>
+        Effect: the flask appears to shimmer or bubble, like a living data visualization.<br><br>
+
+        <strong style="color: var(--text)">color mapping</strong><br>
+        All cells use a single greyscale formula: <code style="color:var(--text)">rgb(v, v, v)</code> where<br>
+        <code style="color:var(--text)">v = 22 + brightness × (224 − 22)</code><br>
+        Brightness 0 → #161616 (dark cell), Brightness 1 → #e0e0e0 (full bright).<br>
+        No color is ever introduced. The entire animation is monochrome.<br><br>
+
+        <strong style="color: var(--text)">state persistence</strong><br>
+        Animation state (cell positions + brightness) is saved to sessionStorage on page hide.<br>
+        On revisit within the same session, the grid resumes from its last state — no jarring reset.
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SPACING ── -->
+  <section>
+    <h2>Spacing Scale</h2>
+
+    <div class="spacing-row">
+      <div class="spacing-block">
+        <div class="spacing-box" style="width:16px;height:16px"></div>
+        <span class="spacing-label">0.25rem</span>
+      </div>
+      <div class="spacing-block">
+        <div class="spacing-box" style="width:24px;height:24px"></div>
+        <span class="spacing-label">0.5rem</span>
+      </div>
+      <div class="spacing-block">
+        <div class="spacing-box" style="width:40px;height:40px"></div>
+        <span class="spacing-label">1rem</span>
+      </div>
+      <div class="spacing-block">
+        <div class="spacing-box" style="width:64px;height:64px"></div>
+        <span class="spacing-label">2rem</span>
+      </div>
+      <div class="spacing-block">
+        <div class="spacing-box" style="width:96px;height:96px"></div>
+        <span class="spacing-label">3rem</span>
+      </div>
+      <div class="spacing-block">
+        <div class="spacing-box" style="width:128px;height:128px"></div>
+        <span class="spacing-label">4rem</span>
+      </div>
+    </div>
+
+    <div style="margin-top: 1rem">
+      <div class="meta" style="font-size: 0.65rem; color: var(--text-dim); line-height: 1.8;">
+        Hero padding: 4rem 3rem (desktop), 1.75rem (mobile).<br>
+        Section gap: 1rem between info elements. 4rem between columns.<br>
+        Border-radius: 0 everywhere. Sharp corners only.
+      </div>
+    </div>
+  </section>
+
+  <!-- ── GUIDELINES ── -->
+  <section>
+    <h2>Usage Guidelines</h2>
+
+    <div class="guidelines">
+      <div class="guideline-col do">
+        <h3>Do</h3>
+        <ul>
+          <li>Use lowercase for all text</li>
+          <li>Maintain monospace typeface throughout</li>
+          <li>Create hierarchy with size and opacity</li>
+          <li>Keep borders at 1px, sharp corners</li>
+          <li>Use greyscale only — no color</li>
+          <li>Let the grid animation provide visual interest</li>
+          <li>Use transparent backgrounds for interactive elements</li>
+        </ul>
+      </div>
+      <div class="guideline-col dont">
+        <h3>Don't</h3>
+        <ul>
+          <li>Introduce color or gradients</li>
+          <li>Use rounded corners or border-radius</li>
+          <li>Mix typefaces or use sans-serif</li>
+          <li>Use uppercase or title case for headings</li>
+          <li>Add drop shadows or blur effects</li>
+          <li>Use filled/solid buttons as default state</li>
+          <li>Break the monochrome grid aesthetic</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer style="margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--text-dim);">
+    <p style="font-size: 0.65rem; color: var(--text-dim);">alkera ai — style guide · last updated april 2026</p>
+  </footer>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const btn = document.querySelector('.theme-toggle');
+      if (html.dataset.theme === 'light') {
+        html.removeAttribute('data-theme');
+        btn.textContent = 'light mode';
+      } else {
+        html.dataset.theme = 'light';
+        btn.textContent = 'dark mode';
+      }
+    }
+
+    // Grid demos
+    (function () {
+      const cols = 12, rows = 6;
+
+      // Background grid demo — dim, subtle pulses
+      const bgGrid = document.getElementById('grid-demo-bg');
+      for (let i = 0; i < cols * rows; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'grid-cell';
+        const v = 22 + Math.floor(Math.random() * 12);
+        cell.style.background = `rgb(${v},${v},${v})`;
+        bgGrid.appendChild(cell);
+      }
+      setInterval(() => {
+        const cells = bgGrid.querySelectorAll('.grid-cell');
+        const idx = Math.floor(Math.random() * cells.length);
+        const v = 22 + Math.floor(Math.random() * 30);
+        cells[idx].style.background = `rgb(${v},${v},${v})`;
+      }, 200);
+
+      // Flask grid demo — bright, active shimmer
+      const flaskGrid = document.getElementById('grid-demo-flask');
+      for (let i = 0; i < cols * rows; i++) {
+        const cell = document.createElement('div');
+        cell.className = 'grid-cell';
+        const v = 100 + Math.floor(Math.random() * 124);
+        cell.style.background = `rgb(${v},${v},${v})`;
+        flaskGrid.appendChild(cell);
+      }
+      setInterval(() => {
+        const cells = flaskGrid.querySelectorAll('.grid-cell');
+        const idx = Math.floor(Math.random() * cells.length);
+        const v = 80 + Math.floor(Math.random() * 144);
+        cells[idx].style.background = `rgb(${v},${v},${v})`;
+      }, 100);
+    })();
+  </script>
+</body>
+</html>
