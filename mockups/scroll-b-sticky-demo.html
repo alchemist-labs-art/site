@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mockup B — Sticky Demo + Text Scroll</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f0f0f;
+      --elevated: #161616;
+      --text: #e0e0e0;
+      --dim: #888;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; }
+
+    .hero {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .hero h1 { font-family: 'Courier New', monospace; font-weight: 300; font-size: 4rem; letter-spacing: -0.02em; }
+    .hero p { color: var(--dim); font-size: 0.85rem; }
+    .scroll-hint {
+      position: absolute; bottom: 2rem;
+      font-size: 0.7rem; color: var(--dim); letter-spacing: 0.1em;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+    /* ── Concept: Sticky product UI on left, feature text scrolls on right ── */
+    /* Like Stripe or Linear's scroll-linked sections. The "app" stays pinned */
+    /* while copy cards scroll past, and the app UI morphs per section. */
+
+    .product-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 300vh;
+      position: relative;
+    }
+
+    .sticky-side {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem;
+    }
+
+    .app-frame {
+      width: 100%;
+      max-width: 540px;
+      aspect-ratio: 4/3;
+      background: var(--elevated);
+      border: 1px solid #222;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .app-titlebar {
+      height: 28px;
+      background: #1a1a1a;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      gap: 5px;
+      flex-shrink: 0;
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #333; }
+
+    .app-body {
+      flex: 1;
+      position: relative;
+    }
+
+    /* Stacked app states — only one visible at a time via JS */
+    .app-state {
+      position: absolute;
+      inset: 0;
+      padding: 20px;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .app-state.active { opacity: 1; }
+
+    /* State 1: Query editor */
+    .state-query { gap: 10px; }
+    .query-line { height: 7px; background: #222; border-radius: 2px; }
+    .query-line.typed { background: #3a3a3a; }
+    .cursor-blink {
+      display: inline-block; width: 2px; height: 14px; background: var(--dim);
+      animation: blink 1s step-end infinite; margin-left: 4px; vertical-align: middle;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* State 2: Live results */
+    .state-results { flex-direction: row; gap: 1px; }
+    .results-table {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+    .table-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+    }
+    .table-cell { height: 22px; background: #1a1a1a; }
+    .table-row:first-child .table-cell { background: #252525; }
+    .results-chart {
+      width: 160px;
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      padding: 8px;
+    }
+    .bar { flex: 1; background: #2a2a2a; border-radius: 2px 2px 0 0; min-height: 8px; }
+    .bar:nth-child(2) { background: #404040; }
+    .bar:nth-child(5) { background: #404040; }
+
+    /* State 3: Pipeline DAG */
+    .state-dag {
+      align-items: center;
+      justify-content: center;
+    }
+    .dag-nodes {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      align-items: center;
+    }
+    .dag-row {
+      display: flex;
+      gap: 20px;
+    }
+    .dag-node {
+      width: 80px;
+      height: 36px;
+      border: 1px solid #333;
+      border-radius: 4px;
+      background: #1a1a1a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .dag-node.active { border-color: #555; background: #222; }
+    .dag-node-inner { width: 40px; height: 5px; background: #333; border-radius: 2px; }
+    .dag-node.active .dag-node-inner { background: #555; }
+    .dag-connector {
+      width: 1px; height: 16px; background: #333; margin: -20px auto;
+    }
+    .dag-connector-row {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    /* Scroll-side feature cards */
+    .scroll-side {
+      padding: 0 4rem;
+    }
+
+    .feature-card {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 2rem 0;
+    }
+
+    .feature-card .number {
+      font-family: 'Courier New', monospace;
+      font-size: 0.6rem;
+      color: var(--dim);
+      letter-spacing: 0.15em;
+      margin-bottom: 1.5rem;
+    }
+
+    .feature-card h2 {
+      font-size: 2rem;
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+
+    .feature-card p {
+      font-size: 0.9rem;
+      color: var(--dim);
+      line-height: 1.7;
+      max-width: 380px;
+    }
+
+    .feature-card .detail {
+      margin-top: 1.5rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.7rem;
+      color: #555;
+      line-height: 1.8;
+    }
+
+    /* ── Metrics bar ── */
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    .metric {
+      padding: 4rem 3rem;
+      text-align: center;
+      border-right: 1px solid #1a1a1a;
+    }
+    .metric:last-child { border-right: none; }
+    .metric .number { font-size: 3.5rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
+    .metric .label { font-size: 0.8rem; color: var(--dim); margin-top: 0.5rem; }
+
+    /* ── CTA ── */
+    .cta {
+      height: 50vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      text-align: center;
+    }
+    .cta h2 { font-size: 2.5rem; font-weight: 600; letter-spacing: -0.02em; }
+    .cta-btn {
+      background: transparent; border: 1px solid var(--text); color: var(--text);
+      font-family: 'Courier New', monospace; font-size: 0.85rem;
+      padding: 0.5rem 1.5rem; cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .cta-btn:hover { background: var(--text); color: var(--bg); }
+
+    .mockup-badge {
+      position: fixed; top: 1rem; right: 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.6rem; color: var(--dim);
+      background: #1a1a1a; padding: 4px 10px;
+      border: 1px solid #333; z-index: 10;
+    }
+
+    @media (max-width: 800px) {
+      .product-section { grid-template-columns: 1fr; }
+      .sticky-side { position: relative; height: auto; min-height: 50vh; }
+    }
+  </style>
+</head>
+<body>
+  <div class="mockup-badge">mockup b — sticky demo</div>
+
+  <section class="hero">
+    <h1>alkera ai</h1>
+    <p><strong>manifold</strong>: the next generation ide for data.</p>
+    <div class="scroll-hint">scroll ↓</div>
+  </section>
+
+  <section class="product-section">
+    <div class="sticky-side">
+      <div class="app-frame">
+        <div class="app-titlebar">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+        <div class="app-body">
+          <!-- State 1: AI query editing -->
+          <div class="app-state state-query active" data-state="0">
+            <div class="query-line typed" style="width:50%"></div>
+            <div class="query-line typed" style="width:75%"></div>
+            <div class="query-line" style="width:60%"></div>
+            <div class="query-line" style="width:40%"></div>
+            <div style="height: 12px"></div>
+            <div class="query-line typed" style="width:85%"></div>
+            <div class="query-line" style="width:55%"></div>
+            <div class="query-line typed" style="width:70%"></div>
+            <div style="display:flex;align-items:center;">
+              <div class="query-line" style="width:30%;margin:0"></div>
+              <div class="cursor-blink"></div>
+            </div>
+          </div>
+
+          <!-- State 2: Live results -->
+          <div class="app-state state-results" data-state="1">
+            <div class="results-table">
+              <div class="table-row"><div class="table-cell"></div><div class="table-cell"></div><div class="table-cell"></div><div class="table-cell"></div></div>
+              <div class="table-row"><div class="table-cell"></div><div class="table-cell"></div><div class="table-cell"></div><div class="table-cell"></div></div>
+              <div class="table-row"><div class="table-cell"></div><div class="table-cell"></div><div class="table-cell"></div><div class="table-cell"></div></div>
+              <div class="table-row"><div class="table-cell"></div><div class="table-cell"></div><div class="table-cell"></div><div class="table-cell"></div></div>
+              <div class="table-row"><div class="table-cell"></div><div class="table-cell"></div><div class="table-cell"></div><div class="table-cell"></div></div>
+              <div class="table-row"><div class="table-cell"></div><div class="table-cell"></div><div class="table-cell"></div><div class="table-cell"></div></div>
+            </div>
+            <div class="results-chart">
+              <div class="bar" style="height:25%"></div>
+              <div class="bar" style="height:60%"></div>
+              <div class="bar" style="height:40%"></div>
+              <div class="bar" style="height:30%"></div>
+              <div class="bar" style="height:75%"></div>
+              <div class="bar" style="height:50%"></div>
+            </div>
+          </div>
+
+          <!-- State 3: Pipeline DAG -->
+          <div class="app-state state-dag" data-state="2">
+            <div class="dag-nodes">
+              <div class="dag-row">
+                <div class="dag-node active"><div class="dag-node-inner"></div></div>
+              </div>
+              <div class="dag-row">
+                <div class="dag-node"><div class="dag-node-inner"></div></div>
+                <div class="dag-node active"><div class="dag-node-inner"></div></div>
+                <div class="dag-node"><div class="dag-node-inner"></div></div>
+              </div>
+              <div class="dag-row">
+                <div class="dag-node"><div class="dag-node-inner"></div></div>
+                <div class="dag-node"><div class="dag-node-inner"></div></div>
+              </div>
+              <div class="dag-row">
+                <div class="dag-node active"><div class="dag-node-inner"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-side">
+      <div class="feature-card" data-index="0">
+        <div class="number">01</div>
+        <h2>AI that speaks<br>your data's language</h2>
+        <p>Describe what you need in plain English. Manifold generates SQL, Python, or dbt models that are aware of your exact schema, lineage, and warehouse dialect.</p>
+        <div class="detail">
+          → schema-aware autocomplete<br>
+          → natural language to production SQL<br>
+          → inline AI chat with full context
+        </div>
+      </div>
+      <div class="feature-card" data-index="1">
+        <div class="number">02</div>
+        <h2>Instant feedback<br>on every keystroke</h2>
+        <p>Results appear as you type. Tables, charts, and aggregations re-compute live — turning exploration from a write-run-wait loop into a fluid conversation with your data.</p>
+        <div class="detail">
+          → sub-second query previews<br>
+          → inline charts + table results<br>
+          → no run button required
+        </div>
+      </div>
+      <div class="feature-card" data-index="2">
+        <div class="number">03</div>
+        <h2>See the full picture,<br>not just one query</h2>
+        <p>Manifold maps your entire data pipeline as a visual DAG. Trace lineage, spot bottlenecks, and understand how upstream changes cascade — all from within your editor.</p>
+        <div class="detail">
+          → visual pipeline DAG<br>
+          → column-level lineage tracking<br>
+          → impact analysis before deploy
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="metrics">
+    <div class="metric">
+      <div class="number">3.2x</div>
+      <div class="label">faster query iteration</div>
+    </div>
+    <div class="metric">
+      <div class="number">40%</div>
+      <div class="label">less context switching</div>
+    </div>
+    <div class="metric">
+      <div class="number">1</div>
+      <div class="label">tool instead of five</div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <h2>Stop tabbing between tools.</h2>
+    <button class="cta-btn">join waitlist →</button>
+  </section>
+
+  <script>
+    const cards = document.querySelectorAll('.feature-card');
+    const states = document.querySelectorAll('.app-state');
+
+    function updateState() {
+      let activeIndex = 0;
+      cards.forEach((card, i) => {
+        const rect = card.getBoundingClientRect();
+        if (rect.top < window.innerHeight * 0.5) activeIndex = i;
+      });
+      states.forEach((s, i) => s.classList.toggle('active', i === activeIndex));
+    }
+
+    window.addEventListener('scroll', updateState, { passive: true });
+  </script>
+</body>
+</html>

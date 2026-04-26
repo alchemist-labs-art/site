@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mockup A — Cinematic Panels</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f0f0f;
+      --elevated: #161616;
+      --text: #e0e0e0;
+      --dim: #888;
+      --cell: 14px;
+      --square: 12px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; }
+
+    /* ── Hero (placeholder for existing site) ── */
+    .hero {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 0.5rem;
+      border-bottom: 1px solid #222;
+    }
+    .hero h1 { font-family: 'Courier New', monospace; font-weight: 300; font-size: 4rem; letter-spacing: -0.02em; }
+    .hero p { color: var(--dim); font-size: 0.85rem; }
+    .scroll-hint {
+      position: absolute; bottom: 2rem;
+      font-size: 0.7rem; color: var(--dim); letter-spacing: 0.1em;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+    /* ── Concept: full-viewport cinematic panels ── */
+    /* Each feature gets a full screen. Left = text, Right = fake UI screenshot. */
+    /* Scrolling feels like flipping through a lookbook. */
+
+    .panel {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 0 6rem;
+      gap: 4rem;
+      border-bottom: 1px solid #1a1a1a;
+    }
+
+    .panel:nth-child(even) .panel-text { order: 2; }
+    .panel:nth-child(even) .panel-visual { order: 1; }
+
+    .panel-text { max-width: 420px; }
+    .panel-text .label {
+      font-family: 'Courier New', monospace;
+      font-size: 0.65rem;
+      color: var(--dim);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .panel-text h2 {
+      font-size: 2.2rem;
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      margin-bottom: 1rem;
+    }
+    .panel-text p {
+      font-size: 0.95rem;
+      color: var(--dim);
+      line-height: 1.6;
+    }
+
+    /* Fake product UI screenshots */
+    .panel-visual {
+      background: var(--elevated);
+      border: 1px solid #222;
+      border-radius: 8px;
+      aspect-ratio: 16/10;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .fake-titlebar {
+      height: 32px;
+      background: #1a1a1a;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .fake-dot { width: 10px; height: 10px; border-radius: 50%; background: #333; }
+    .fake-content {
+      flex: 1;
+      display: flex;
+      gap: 1px;
+    }
+    .fake-sidebar {
+      width: 180px;
+      background: #131313;
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .fake-sidebar-item {
+      height: 8px;
+      background: #222;
+      border-radius: 2px;
+    }
+    .fake-sidebar-item.active { background: #444; }
+    .fake-editor {
+      flex: 1;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .fake-line {
+      height: 6px;
+      background: #222;
+      border-radius: 2px;
+    }
+    .fake-line.bright { background: #3a3a3a; }
+    .fake-line.short { width: 60%; }
+    .fake-line.medium { width: 80%; }
+
+    /* AI chat panel overlay */
+    .fake-ai-panel {
+      width: 240px;
+      background: #111;
+      border-left: 1px solid #222;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .fake-ai-msg {
+      background: #1a1a1a;
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-size: 0;
+    }
+    .fake-ai-line { height: 5px; background: #2a2a2a; border-radius: 2px; margin-bottom: 4px; }
+    .fake-ai-line:last-child { width: 60%; margin-bottom: 0; }
+
+    /* Chart area */
+    .fake-chart-area {
+      flex: 1;
+      padding: 24px;
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+    }
+    .fake-bar {
+      flex: 1;
+      background: #2a2a2a;
+      border-radius: 2px 2px 0 0;
+      transition: height 0.3s;
+    }
+    .fake-bar.highlight { background: #555; }
+
+    /* Data table */
+    .fake-table {
+      flex: 1;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+    .fake-table-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1px;
+    }
+    .fake-table-cell {
+      height: 24px;
+      background: #1a1a1a;
+    }
+    .fake-table-row:first-child .fake-table-cell { background: #222; }
+    .fake-table-cell.glow { background: #2a2a2a; }
+
+    /* ── CTA section ── */
+    .cta {
+      height: 60vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      text-align: center;
+    }
+    .cta h2 { font-size: 2.5rem; font-weight: 600; letter-spacing: -0.02em; }
+    .cta p { color: var(--dim); font-size: 0.95rem; }
+    .cta-btn {
+      background: transparent;
+      border: 1px solid var(--text);
+      color: var(--text);
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      padding: 0.5rem 1.5rem;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .cta-btn:hover { background: var(--text); color: var(--bg); }
+
+    .mockup-badge {
+      position: fixed; top: 1rem; right: 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.6rem; color: var(--dim);
+      background: #1a1a1a; padding: 4px 10px;
+      border: 1px solid #333; z-index: 10;
+    }
+
+    @media (max-width: 800px) {
+      .panel { grid-template-columns: 1fr; padding: 4rem 2rem; }
+      .panel:nth-child(even) .panel-text { order: 1; }
+      .panel:nth-child(even) .panel-visual { order: 2; }
+    }
+  </style>
+</head>
+<body>
+  <div class="mockup-badge">mockup a — cinematic panels</div>
+
+  <section class="hero">
+    <h1>alkera ai</h1>
+    <p><strong>manifold</strong>: the next generation ide for data.</p>
+    <div class="scroll-hint">scroll ↓</div>
+  </section>
+
+  <!-- Panel 1: AI-native editing -->
+  <section class="panel">
+    <div class="panel-text">
+      <div class="label">01 · ai-native</div>
+      <h2>Write queries with<br>AI that understands<br>your data</h2>
+      <p>Manifold's AI assistant knows your schema, your pipelines, and your intent. Ask in natural language, get production-ready SQL, Python, or dbt — with full context of your warehouse.</p>
+    </div>
+    <div class="panel-visual">
+      <div class="fake-titlebar">
+        <div class="fake-dot"></div><div class="fake-dot"></div><div class="fake-dot"></div>
+      </div>
+      <div class="fake-content">
+        <div class="fake-editor">
+          <div class="fake-line bright" style="width:45%"></div>
+          <div class="fake-line" style="width:70%"></div>
+          <div class="fake-line" style="width:55%"></div>
+          <div class="fake-line bright" style="width:85%"></div>
+          <div class="fake-line" style="width:40%"></div>
+          <div class="fake-line" style="width:65%"></div>
+          <div style="height:8px"></div>
+          <div class="fake-line bright" style="width:90%"></div>
+          <div class="fake-line" style="width:50%"></div>
+        </div>
+        <div class="fake-ai-panel">
+          <div class="fake-ai-msg">
+            <div class="fake-ai-line"></div>
+            <div class="fake-ai-line"></div>
+            <div class="fake-ai-line"></div>
+          </div>
+          <div class="fake-ai-msg">
+            <div class="fake-ai-line" style="background:#353535"></div>
+            <div class="fake-ai-line" style="background:#353535"></div>
+            <div class="fake-ai-line" style="background:#353535; width:40%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Panel 2: Reactive data exploration -->
+  <section class="panel">
+    <div class="panel-text">
+      <div class="label">02 · reactive</div>
+      <h2>See results the<br>moment you think<br>of the question</h2>
+      <p>Every edit triggers an instant preview. Tables, charts, and summaries update in real-time as you write — no run buttons, no waiting, no context switching.</p>
+    </div>
+    <div class="panel-visual">
+      <div class="fake-titlebar">
+        <div class="fake-dot"></div><div class="fake-dot"></div><div class="fake-dot"></div>
+      </div>
+      <div class="fake-content" style="flex-direction: column;">
+        <div class="fake-editor" style="flex: 0 0 35%; border-bottom: 1px solid #222;">
+          <div class="fake-line bright" style="width:50%"></div>
+          <div class="fake-line" style="width:75%"></div>
+          <div class="fake-line" style="width:60%"></div>
+        </div>
+        <div class="fake-chart-area">
+          <div class="fake-bar" style="height:30%"></div>
+          <div class="fake-bar highlight" style="height:65%"></div>
+          <div class="fake-bar" style="height:45%"></div>
+          <div class="fake-bar highlight" style="height:80%"></div>
+          <div class="fake-bar" style="height:55%"></div>
+          <div class="fake-bar" style="height:35%"></div>
+          <div class="fake-bar highlight" style="height:70%"></div>
+          <div class="fake-bar" style="height:40%"></div>
+          <div class="fake-bar" style="height:60%"></div>
+          <div class="fake-bar highlight" style="height:90%"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Panel 3: Unified workspace -->
+  <section class="panel">
+    <div class="panel-text">
+      <div class="label">03 · unified</div>
+      <h2>SQL, Python, and<br>dashboards in one<br>workspace</h2>
+      <p>Stop juggling notebooks, BI tools, and SQL editors. Manifold is a single environment where queries, transformations, and visualizations live side by side — connected to your live warehouse.</p>
+    </div>
+    <div class="panel-visual">
+      <div class="fake-titlebar">
+        <div class="fake-dot"></div><div class="fake-dot"></div><div class="fake-dot"></div>
+      </div>
+      <div class="fake-content">
+        <div class="fake-sidebar">
+          <div class="fake-sidebar-item active" style="width:80%"></div>
+          <div class="fake-sidebar-item" style="width:65%"></div>
+          <div class="fake-sidebar-item" style="width:70%"></div>
+          <div style="height:8px"></div>
+          <div class="fake-sidebar-item" style="width:55%"></div>
+          <div class="fake-sidebar-item" style="width:75%"></div>
+          <div class="fake-sidebar-item" style="width:50%"></div>
+          <div style="height:8px"></div>
+          <div class="fake-sidebar-item" style="width:60%"></div>
+          <div class="fake-sidebar-item" style="width:80%"></div>
+        </div>
+        <div style="flex:1; display:flex; flex-direction:column;">
+          <div class="fake-editor" style="flex: 0 0 40%; border-bottom: 1px solid #222;">
+            <div class="fake-line bright" style="width:55%"></div>
+            <div class="fake-line" style="width:80%"></div>
+            <div class="fake-line" style="width:45%"></div>
+          </div>
+          <div class="fake-table">
+            <div class="fake-table-row">
+              <div class="fake-table-cell"></div><div class="fake-table-cell"></div><div class="fake-table-cell"></div><div class="fake-table-cell"></div><div class="fake-table-cell"></div>
+            </div>
+            <div class="fake-table-row">
+              <div class="fake-table-cell glow"></div><div class="fake-table-cell"></div><div class="fake-table-cell glow"></div><div class="fake-table-cell"></div><div class="fake-table-cell"></div>
+            </div>
+            <div class="fake-table-row">
+              <div class="fake-table-cell"></div><div class="fake-table-cell glow"></div><div class="fake-table-cell"></div><div class="fake-table-cell glow"></div><div class="fake-table-cell"></div>
+            </div>
+            <div class="fake-table-row">
+              <div class="fake-table-cell glow"></div><div class="fake-table-cell"></div><div class="fake-table-cell"></div><div class="fake-table-cell"></div><div class="fake-table-cell glow"></div>
+            </div>
+            <div class="fake-table-row">
+              <div class="fake-table-cell"></div><div class="fake-table-cell"></div><div class="fake-table-cell glow"></div><div class="fake-table-cell"></div><div class="fake-table-cell"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <h2>Ready to rethink<br>how you work with data?</h2>
+    <p>Join the waitlist for early access to Manifold.</p>
+    <button class="cta-btn">join waitlist →</button>
+  </section>
+</body>
+</html>

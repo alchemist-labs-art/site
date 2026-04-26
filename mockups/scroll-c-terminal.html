@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mockup C — Terminal Narrative</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f0f0f;
+      --elevated: #161616;
+      --text: #e0e0e0;
+      --dim: #888;
+      --dim2: #555;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; }
+
+    .hero {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .hero h1 { font-family: 'Courier New', monospace; font-weight: 300; font-size: 4rem; letter-spacing: -0.02em; }
+    .hero p { color: var(--dim); font-size: 0.85rem; }
+    .scroll-hint {
+      position: absolute; bottom: 2rem;
+      font-size: 0.7rem; color: var(--dim); letter-spacing: 0.1em;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+    /* ── Concept: monospace-heavy narrative scroll ── */
+    /* Leans into the terminal/code aesthetic. Each section uses */
+    /* the mono font with typed-out style content. Feels like */
+    /* reading a codebase — very on-brand for dev tools. */
+
+    /* Big statement sections */
+    .statement {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem;
+    }
+    .statement-inner {
+      max-width: 700px;
+      width: 100%;
+    }
+    .statement h2 {
+      font-family: 'Courier New', monospace;
+      font-weight: 400;
+      font-size: clamp(1.5rem, 3.5vw, 2.8rem);
+      line-height: 1.4;
+      letter-spacing: -0.01em;
+    }
+    .statement h2 .dim { color: var(--dim); }
+    .statement h2 .dim2 { color: var(--dim2); }
+
+    /* Comparison grid: before/after */
+    .comparison {
+      padding: 6rem 4rem;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    .comparison-label {
+      font-family: 'Courier New', monospace;
+      font-size: 0.65rem;
+      color: var(--dim2);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 0;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .comp-col {
+      padding: 2rem;
+    }
+    .comp-divider {
+      width: 1px;
+      background: #222;
+    }
+    .comp-header {
+      font-family: 'Courier New', monospace;
+      font-size: 0.7rem;
+      color: var(--dim2);
+      letter-spacing: 0.1em;
+      margin-bottom: 2rem;
+    }
+    .comp-item {
+      font-family: 'Courier New', monospace;
+      font-size: 0.8rem;
+      color: var(--dim);
+      line-height: 2.2;
+    }
+    .comp-col:first-child .comp-item {
+      text-decoration: line-through;
+      text-decoration-color: #333;
+    }
+    .comp-col:last-child .comp-item {
+      color: var(--text);
+    }
+
+    /* Feature blocks: code-comment style */
+    .features {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 6rem 2rem;
+    }
+    .feature-block {
+      margin-bottom: 4rem;
+    }
+    .feature-block .comment {
+      font-family: 'Courier New', monospace;
+      font-size: 0.75rem;
+      color: var(--dim2);
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+    .feature-block h3 {
+      font-family: 'Courier New', monospace;
+      font-weight: 400;
+      font-size: 1.3rem;
+      margin-bottom: 0.75rem;
+    }
+    .feature-block p {
+      font-size: 0.85rem;
+      color: var(--dim);
+      line-height: 1.7;
+    }
+
+    /* Workflow: horizontal steps */
+    .workflow {
+      padding: 6rem 4rem;
+      border-top: 1px solid #1a1a1a;
+      overflow-x: auto;
+    }
+    .workflow-label {
+      font-family: 'Courier New', monospace;
+      font-size: 0.65rem;
+      color: var(--dim2);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    .workflow-steps {
+      display: flex;
+      gap: 0;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .workflow-step {
+      flex: 1;
+      padding: 2rem;
+      border: 1px solid #1a1a1a;
+      min-width: 180px;
+    }
+    .workflow-step:not(:last-child) {
+      border-right: none;
+    }
+    .step-num {
+      font-family: 'Courier New', monospace;
+      font-size: 2rem;
+      font-weight: 400;
+      color: #222;
+      margin-bottom: 1rem;
+    }
+    .step-title {
+      font-family: 'Courier New', monospace;
+      font-size: 0.8rem;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+    .step-desc {
+      font-size: 0.75rem;
+      color: var(--dim);
+      line-height: 1.6;
+    }
+
+    /* Terminal demo */
+    .terminal-section {
+      padding: 6rem 4rem;
+      display: flex;
+      justify-content: center;
+    }
+    .terminal {
+      max-width: 600px;
+      width: 100%;
+      background: var(--elevated);
+      border: 1px solid #222;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .terminal-bar {
+      height: 28px;
+      background: #1a1a1a;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      gap: 5px;
+    }
+    .tdot { width: 8px; height: 8px; border-radius: 50%; background: #333; }
+    .terminal-body {
+      padding: 16px 20px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.75rem;
+      line-height: 1.9;
+    }
+    .t-prompt { color: var(--dim); }
+    .t-cmd { color: var(--text); }
+    .t-output { color: var(--dim2); }
+    .t-success { color: #6b6; }
+    .t-cursor {
+      display: inline-block; width: 7px; height: 13px;
+      background: var(--dim); vertical-align: middle;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* CTA */
+    .cta {
+      height: 60vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      text-align: center;
+    }
+    .cta h2 {
+      font-family: 'Courier New', monospace;
+      font-size: 1.8rem;
+      font-weight: 400;
+    }
+    .cta-btn {
+      background: transparent; border: 1px solid var(--text); color: var(--text);
+      font-family: 'Courier New', monospace; font-size: 0.85rem;
+      padding: 0.5rem 1.5rem; cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .cta-btn:hover { background: var(--text); color: var(--bg); }
+
+    .mockup-badge {
+      position: fixed; top: 1rem; right: 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.6rem; color: var(--dim);
+      background: #1a1a1a; padding: 4px 10px;
+      border: 1px solid #333; z-index: 10;
+    }
+
+    @media (max-width: 640px) {
+      .comparison-grid { grid-template-columns: 1fr; }
+      .comp-divider { width: 100%; height: 1px; }
+      .workflow-steps { flex-direction: column; }
+      .workflow-step:not(:last-child) { border-right: 1px solid #1a1a1a; border-bottom: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="mockup-badge">mockup c — terminal narrative</div>
+
+  <section class="hero">
+    <h1>alkera ai</h1>
+    <p><strong>manifold</strong>: the next generation ide for data.</p>
+    <div class="scroll-hint">scroll ↓</div>
+  </section>
+
+  <!-- Big opening statement -->
+  <section class="statement">
+    <div class="statement-inner">
+      <h2>
+        <span class="dim2">// </span>data teams use 5+ tools<br>
+        <span class="dim2">// </span>to do the job of one.<br>
+        <span class="dim2">// </span><br>
+        <span class="dim2">// </span><span class="dim">notebooks. sql editors.</span><br>
+        <span class="dim2">// </span><span class="dim">bi dashboards. dbt. airflow.</span><br>
+        <span class="dim2">// </span><br>
+        <span class="dim2">// </span>what if there was just<br>
+        manifold<span class="dim2">;</span>
+      </h2>
+    </div>
+  </section>
+
+  <!-- Before / After comparison -->
+  <section class="comparison">
+    <div class="comparison-label">before → after</div>
+    <div class="comparison-grid">
+      <div class="comp-col">
+        <div class="comp-header">today</div>
+        <div class="comp-item">jupyter for exploration</div>
+        <div class="comp-item">dbeaver for sql</div>
+        <div class="comp-item">dbt for transforms</div>
+        <div class="comp-item">looker for dashboards</div>
+        <div class="comp-item">airflow for orchestration</div>
+        <div class="comp-item">slack for asking "where is this table?"</div>
+      </div>
+      <div class="comp-divider"></div>
+      <div class="comp-col">
+        <div class="comp-header">manifold</div>
+        <div class="comp-item">write sql or python</div>
+        <div class="comp-item">see results instantly</div>
+        <div class="comp-item">ai generates transforms</div>
+        <div class="comp-item">charts render inline</div>
+        <div class="comp-item">pipelines are visual</div>
+        <div class="comp-item">ai knows your full schema</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Code-comment style features -->
+  <section class="features">
+    <div class="feature-block">
+      <div class="comment">// the problem with notebooks is they're not connected<br>// to anything. manifold is connected to everything.</div>
+      <h3>schema-aware ai</h3>
+      <p>Manifold indexes your warehouse — tables, columns, types, relationships. When the AI writes a query, it's not guessing. It knows your data the way you do after six months on the job.</p>
+    </div>
+    <div class="feature-block">
+      <div class="comment">// you shouldn't need a "run" button.<br>// your editor should be as fast as your thinking.</div>
+      <h3>reactive execution</h3>
+      <p>Every change triggers an incremental re-computation. Results, charts, and data previews update as you type. The feedback loop collapses from minutes to milliseconds.</p>
+    </div>
+    <div class="feature-block">
+      <div class="comment">// lineage shouldn't live in a separate tool.<br>// it should be visible where you write your code.</div>
+      <h3>visual lineage</h3>
+      <p>See your entire pipeline as an interactive DAG, right in the editor. Trace column-level dependencies, understand impact before deploying, spot bottlenecks at a glance.</p>
+    </div>
+  </section>
+
+  <!-- Workflow steps -->
+  <section class="workflow">
+    <div class="workflow-label">how it works</div>
+    <div class="workflow-steps">
+      <div class="workflow-step">
+        <div class="step-num">01</div>
+        <div class="step-title">connect</div>
+        <div class="step-desc">Point Manifold at your warehouse. Snowflake, BigQuery, Postgres, Redshift — one click.</div>
+      </div>
+      <div class="workflow-step">
+        <div class="step-num">02</div>
+        <div class="step-title">explore</div>
+        <div class="step-desc">Ask questions in natural language or write SQL directly. Results appear instantly.</div>
+      </div>
+      <div class="workflow-step">
+        <div class="step-num">03</div>
+        <div class="step-title">build</div>
+        <div class="step-desc">Create transformations, models, and charts. AI assists at every step with full context.</div>
+      </div>
+      <div class="workflow-step">
+        <div class="step-num">04</div>
+        <div class="step-title">ship</div>
+        <div class="step-desc">Deploy pipelines, schedule refreshes, share dashboards — all from the same workspace.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Terminal demo -->
+  <section class="terminal-section">
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="tdot"></div><div class="tdot"></div><div class="tdot"></div>
+      </div>
+      <div class="terminal-body">
+        <span class="t-prompt">~/data $ </span><span class="t-cmd">manifold connect snowflake</span><br>
+        <span class="t-success">✓ connected to warehouse prod_analytics</span><br>
+        <span class="t-output">  237 tables · 4,102 columns · lineage indexed</span><br>
+        <br>
+        <span class="t-prompt">~/data $ </span><span class="t-cmd">manifold ask "which customers churned last month?"</span><br>
+        <span class="t-output">  generating query... scanning schema...</span><br>
+        <span class="t-success">✓ query ready — 1,847 rows · 23ms</span><br>
+        <span class="t-output">  preview: ┌─────────┬────────┬───────────┐</span><br>
+        <span class="t-output">           │ user_id │ plan   │ churn_dt  │</span><br>
+        <span class="t-output">           ├─────────┼────────┼───────────┤</span><br>
+        <span class="t-output">           │ 44012   │ pro    │ 2026-03   │</span><br>
+        <span class="t-output">           │ 44198   │ team   │ 2026-03   │</span><br>
+        <span class="t-output">           └─────────┴────────┴───────────┘</span><br>
+        <br>
+        <span class="t-prompt">~/data $ </span><span class="t-cursor"></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <h2>cursor, but for data.</h2>
+    <button class="cta-btn">join waitlist →</button>
+  </section>
+</body>
+</html>
