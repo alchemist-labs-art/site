@@ -19,24 +19,39 @@
     html { scroll-behavior: smooth; }
     body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; }
 
-    /* ── Hero (placeholder for existing site) ── */
+    #bg-canvas { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    #app { position: relative; z-index: 1; width: 100%; }
+
     .hero {
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 0.5rem;
-      border-bottom: 1px solid #222;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 4rem;
+      padding: 4rem 3rem;
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+      align-items: stretch;
+      min-height: 100vh;
+      font-family: 'Courier New', monospace;
     }
-    .hero h1 { font-family: 'Courier New', monospace; font-weight: 300; font-size: 4rem; letter-spacing: -0.02em; }
-    .hero p { color: var(--dim); font-size: 0.85rem; }
+    .flask-col { display: flex; justify-content: center; align-items: center; }
+    .info-col { display: flex; flex-direction: column; justify-content: center; gap: 1rem; }
+    .wordmark { font-weight: 300; font-size: clamp(2.5rem, 5vw, 4.5rem); letter-spacing: -0.02em; line-height: 1; }
+    .hero-desc { font-size: 0.85rem; color: var(--dim); line-height: 1.5; }
+    .hero-contact { font-size: 0.75rem; color: var(--dim); margin-top: 0.5rem; }
+    .hero-contact a { color: var(--dim); text-decoration: underline; text-underline-offset: 3px; }
+    .hero-contact a:hover { color: var(--text); }
     .scroll-hint {
-      position: absolute; bottom: 2rem;
-      font-size: 0.7rem; color: var(--dim); letter-spacing: 0.1em;
+      font-size: 0.65rem; color: #555; letter-spacing: 0.1em; margin-top: 1.5rem;
       animation: pulse 2s ease-in-out infinite;
     }
-    @keyframes pulse { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
+    @keyframes pulse { 0%,100% { opacity: 0.3; } 50% { opacity: 0.8; } }
+
+    @media (max-width: 640px) {
+      .hero { grid-template-columns: 1fr; padding: 0; gap: 0; min-height: 100dvh; }
+      .info-col { padding: 1.75rem 1.75rem 2.5rem; gap: 0.85rem; }
+      .wordmark { font-size: clamp(2rem, 9vw, 2.75rem); }
+    }
 
     /* ── Concept: full-viewport cinematic panels ── */
     /* Each feature gets a full screen. Left = text, Right = fake UI screenshot. */
@@ -229,10 +244,15 @@
 <body>
   <div class="mockup-badge">mockup a — cinematic panels</div>
 
+  <div id="app">
   <section class="hero">
-    <h1>alkera ai</h1>
-    <p><strong>manifold</strong>: the next generation ide for data.</p>
-    <div class="scroll-hint">scroll ↓</div>
+    <div class="flask-col"><div id="flask-placeholder"></div></div>
+    <div class="info-col">
+      <h1 class="wordmark">alkera ai</h1>
+      <p class="hero-desc"><strong>manifold</strong>: the next generation ide for data.</p>
+      <p class="hero-contact">contact us at <a href="mailto:contact@alkera.ai">contact@alkera.ai</a></p>
+      <div class="scroll-hint">scroll to explore ↓</div>
+    </div>
   </section>
 
   <!-- Panel 1: AI-native editing -->
@@ -364,5 +384,41 @@
     <p>Join the waitlist for early access to Manifold.</p>
     <button class="cta-btn">join waitlist →</button>
   </section>
+  </div><!-- #app -->
+
+  <script>
+    const CANVAS_W = 360, CANVAS_H = 500, CELL = 9, SQUARE = 8;
+    const SVG_W = 200, SVG_H = 240;
+    const SVG_FLASK_PATH = 'M 115 30 V 90 L 165 200 A 10 10 0 0 1 155 210 H 45 A 10 10 0 0 1 35 200 L 60 145';
+    const BG_V = 22, ON_V = 224;
+    function toColor(b) { const v = Math.round(BG_V + Math.max(0, Math.min(1, b)) * (ON_V - BG_V)); return `rgb(${v},${v},${v})`; }
+    const FCOLS = Math.floor(CANVAS_W / CELL), FROWS = Math.floor(CANVAS_H / CELL);
+    let flaskCells = [];
+    function buildFlaskPath() {
+      const scale = Math.min(CANVAS_W / SVG_W, CANVAS_H / SVG_H) * 0.88;
+      const ox = (CANVAS_W - SVG_W * scale) / 2, oy = (CANVAS_H - SVG_H * scale) / 2;
+      const out = new Path2D(); out.addPath(new Path2D(SVG_FLASK_PATH), new DOMMatrix([scale, 0, 0, scale, ox, oy])); return out;
+    }
+    function initFlaskCells(ctx, path) {
+      flaskCells = Array.from({ length: FROWS }, (_, r) => Array.from({ length: FCOLS }, (_, c) => {
+        ctx.lineWidth = 28; const isFlask = ctx.isPointInStroke(path, c * CELL + SQUARE / 2, r * CELL + SQUARE / 2);
+        const initB = isFlask ? 0.6 + Math.random() * 0.4 : 0;
+        return { isFlask, brightness: initB, target: initB, speed: 0.02 + Math.random() * 0.03, flipProb: 0.005 + Math.random() * 0.01 };
+      }));
+    }
+    function tickFlask() { for (let r = 0; r < FROWS; r++) for (let c = 0; c < FCOLS; c++) { const cell = flaskCells[r][c]; if (!cell.isFlask) continue; if (Math.random() < cell.flipProb) { cell.target = 0.4 + Math.random() * 0.6; cell.speed = 0.015 + Math.random() * 0.035; } cell.brightness += (cell.target - cell.brightness) * cell.speed; } }
+    function drawFlask(ctx, ox, oy) { for (let r = 0; r < FROWS; r++) for (let c = 0; c < FCOLS; c++) { const cell = flaskCells[r][c]; if (!cell.isFlask) continue; ctx.fillStyle = toColor(cell.brightness); ctx.fillRect(ox + c * CELL, oy + r * CELL, SQUARE, SQUARE); } }
+    let bgCells = [], bgCols = 0, bgRows = 0, bgCtx = null, baseCanvas = null;
+    function buildBaseGrid(w, h) { const c = document.createElement('canvas'); c.width = w; c.height = h; const ctx = c.getContext('2d'); ctx.fillStyle = toColor(0); for (let r = 0; r < bgRows; r++) for (let c2 = 0; c2 < bgCols; c2++) ctx.fillRect(c2 * CELL, r * CELL, SQUARE, SQUARE); return c; }
+    function initBg(w, h) { bgCols = Math.floor(w / CELL); bgRows = Math.floor(h / CELL); baseCanvas = buildBaseGrid(w, h); const count = Math.round(bgCols * bgRows * 0.04); bgCells = Array.from({ length: count }, () => ({ col: Math.floor(Math.random() * bgCols), row: Math.floor(Math.random() * bgRows), brightness: Math.random() * 0.15, target: Math.random() * 0.15, speed: 0.003 + Math.random() * 0.007 })); }
+    function tickBg() { for (const cell of bgCells) { if (Math.random() < 0.002) { if (cell.target > 0.02) { cell.target = 0; } else { cell.col = Math.floor(Math.random() * bgCols); cell.row = Math.floor(Math.random() * bgRows); cell.target = 0.08 + Math.random() * 0.10; } cell.speed = 0.003 + Math.random() * 0.007; } cell.brightness += (cell.target - cell.brightness) * cell.speed; } }
+    function drawBg() { if (!bgCtx || !baseCanvas) return; bgCtx.drawImage(baseCanvas, 0, 0); for (const cell of bgCells) { if (cell.brightness < 0.01) continue; bgCtx.fillStyle = toColor(cell.brightness); bgCtx.fillRect(cell.col * CELL, cell.row * CELL, SQUARE, SQUARE); } }
+    const placeholder = document.getElementById('flask-placeholder'); placeholder.style.width = CANVAS_W + 'px'; placeholder.style.height = CANVAS_H + 'px';
+    const hitCanvas = document.createElement('canvas'); hitCanvas.width = CANVAS_W; hitCanvas.height = CANVAS_H; initFlaskCells(hitCanvas.getContext('2d'), buildFlaskPath());
+    const bgCanvas = document.createElement('canvas'); bgCanvas.id = 'bg-canvas'; document.body.insertBefore(bgCanvas, document.getElementById('app'));
+    const w = window.innerWidth, h = window.innerHeight; bgCanvas.width = w; bgCanvas.height = h; bgCanvas.style.width = w + 'px'; bgCanvas.style.height = h + 'px'; bgCtx = bgCanvas.getContext('2d'); initBg(w, h);
+    const rect = placeholder.getBoundingClientRect(); const flaskOX = Math.round(rect.left / CELL) * CELL; const flaskOY = Math.round(rect.top / CELL) * CELL;
+    (function loop() { tickBg(); drawBg(); tickFlask(); drawFlask(bgCtx, flaskOX, flaskOY); requestAnimationFrame(loop); })();
+  </script>
 </body>
 </html>
