@@ -29,7 +29,8 @@ function buildFlaskPath(): Path2D {
 function initFlaskCells(ctx: CanvasRenderingContext2D, path: Path2D): void {
   flaskCells = Array.from({ length: FROWS }, (_, r) =>
     Array.from({ length: FCOLS }, (_, c) => {
-      const isFlask = ctx.isPointInPath(path, c * CELL + SQUARE / 2, r * CELL + SQUARE / 2)
+      ctx.lineWidth = 28
+      const isFlask = ctx.isPointInStroke(path, c * CELL + SQUARE / 2, r * CELL + SQUARE / 2)
       const initB   = isFlask ? 0.6 + Math.random() * 0.4 : 0
       return { isFlask, brightness: initB, target: initB,
                speed: 0.02 + Math.random() * 0.03, flipProb: 0.005 + Math.random() * 0.01 }
