@@ -284,7 +284,7 @@ export default function HeroSection(): ReactNode {
         <section className="info-col">
           <h1 className="wordmark">alkera ai</h1>
           <p className="description">
-            <strong>alkera ide:</strong> the next generation ide for data.
+            <strong>the next-generation ide for data</strong>
           </p>
           <p className="contact">
             contact us at{' '}
