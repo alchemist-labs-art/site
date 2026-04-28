@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>LinkedIn Banner Generator</title>
+  <style>
+    body { margin: 0; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; font-family: sans-serif; color: #aaa; }
+    canvas { border: 1px solid #333; }
+    button { margin-top: 16px; padding: 10px 24px; background: #e0e0e0; color: #111; border: none; cursor: pointer; font-size: 14px; }
+    button:hover { background: #fff; }
+  </style>
+</head>
+<body>
+  <canvas id="banner" width="1584" height="396"></canvas>
+  <button onclick="download()">Download PNG</button>
+  <script>
+    const W = 1584, H = 396;
+    const CELL = 9, SQUARE = 8;
+    const BG_V = 22;
+    const ON_V = 224;
+    const FLASK_BASE_V = 50; // distinct base color for flask stroke cells
+
+    const canvas = document.getElementById('banner');
+    const ctx = canvas.getContext('2d');
+
+    const cols = Math.floor(W / CELL);
+    const rows = Math.floor(H / CELL);
+
+    // Render a 2D Klein bottle outline onto an offscreen canvas for hit-testing
+    const hitCanvas = document.createElement('canvas');
+    hitCanvas.width = W;
+    hitCanvas.height = H;
+    const hitCtx = hitCanvas.getContext('2d');
+
+    // Draw a detailed 2D Klein bottle on the right side
+    const kx = W - 280;
+    const ky = H / 2;
+    const s = H * 0.42;
+
+    hitCtx.strokeStyle = '#fff';
+    hitCtx.lineCap = 'round';
+    hitCtx.lineJoin = 'round';
+
+    // --- Outer body (left wall) ---
+    hitCtx.lineWidth = 8;
+    hitCtx.beginPath();
+    // Start at bottom-left of the bulb
+    hitCtx.moveTo(kx - s * 0.32, ky + s * 0.8);
+    // Left wall of bulb going up
+    hitCtx.bezierCurveTo(
+      kx - s * 0.55, ky + s * 0.55,
+      kx - s * 0.55, ky + s * 0.05,
+      kx - s * 0.42, ky - s * 0.2
+    );
+    // Neck narrows going up-left
+    hitCtx.bezierCurveTo(
+      kx - s * 0.35, ky - s * 0.45,
+      kx - s * 0.28, ky - s * 0.7,
+      kx - s * 0.12, ky - s * 0.82
+    );
+    // Top of neck curves right
+    hitCtx.bezierCurveTo(
+      kx + s * 0.05, ky - s * 0.92,
+      kx + s * 0.3, ky - s * 0.92,
+      kx + s * 0.42, ky - s * 0.78
+    );
+    // Handle curves down on the right
+    hitCtx.bezierCurveTo(
+      kx + s * 0.55, ky - s * 0.6,
+      kx + s * 0.55, ky - s * 0.3,
+      kx + s * 0.42, ky - s * 0.08
+    );
+    // Handle re-enters the body — goes down and left
+    hitCtx.bezierCurveTo(
+      kx + s * 0.32, ky + s * 0.08,
+      kx + s * 0.15, ky + s * 0.18,
+      kx, ky + s * 0.22
+    );
+    hitCtx.stroke();
+
+    // --- Outer body (right wall) ---
+    hitCtx.beginPath();
+    // Start at bottom-right of bulb
+    hitCtx.moveTo(kx + s * 0.32, ky + s * 0.8);
+    // Right wall of bulb going up
+    hitCtx.bezierCurveTo(
+      kx + s * 0.55, ky + s * 0.55,
+      kx + s * 0.55, ky + s * 0.15,
+      kx + s * 0.35, ky + s * 0.0
+    );
+    hitCtx.stroke();
+
+    // --- Bottom of bulb ---
+    hitCtx.beginPath();
+    hitCtx.moveTo(kx - s * 0.32, ky + s * 0.8);
+    hitCtx.bezierCurveTo(
+      kx - s * 0.2, ky + s * 0.95,
+      kx + s * 0.2, ky + s * 0.95,
+      kx + s * 0.32, ky + s * 0.8
+    );
+    hitCtx.stroke();
+
+    // --- Inner tube (the neck passing "through" the body wall) ---
+    // Right side of inner neck
+    hitCtx.lineWidth = 6;
+    hitCtx.beginPath();
+    hitCtx.moveTo(kx + s * 0.28, ky - s * 0.08);
+    hitCtx.bezierCurveTo(
+      kx + s * 0.2, ky + s * 0.1,
+      kx + s * 0.08, ky + s * 0.25,
+      kx, ky + s * 0.4
+    );
+    // Flare out to connect inside the bulb
+    hitCtx.bezierCurveTo(
+      kx - s * 0.08, ky + s * 0.55,
+      kx - s * 0.12, ky + s * 0.65,
+      kx - s * 0.05, ky + s * 0.72
+    );
+    hitCtx.stroke();
+
+    // Left side of inner neck
+    hitCtx.beginPath();
+    hitCtx.moveTo(kx + s * 0.42, ky - s * 0.08);
+    hitCtx.bezierCurveTo(
+      kx + s * 0.35, ky + s * 0.1,
+      kx + s * 0.22, ky + s * 0.25,
+      kx + s * 0.14, ky + s * 0.4
+    );
+    hitCtx.bezierCurveTo(
+      kx + s * 0.08, ky + s * 0.55,
+      kx + s * 0.12, ky + s * 0.65,
+      kx + s * 0.18, ky + s * 0.72
+    );
+    hitCtx.stroke();
+
+    // --- Inner neck walls going up (above body intersection) ---
+    // Left inner neck wall
+    hitCtx.lineWidth = 6;
+    hitCtx.beginPath();
+    hitCtx.moveTo(kx - s * 0.22, ky - s * 0.75);
+    hitCtx.bezierCurveTo(
+      kx - s * 0.18, ky - s * 0.55,
+      kx - s * 0.18, ky - s * 0.35,
+      kx - s * 0.25, ky - s * 0.18
+    );
+    hitCtx.stroke();
+
+    // Right inner neck wall
+    hitCtx.beginPath();
+    hitCtx.moveTo(kx - s * 0.02, ky - s * 0.85);
+    hitCtx.bezierCurveTo(
+      kx + s * 0.05, ky - s * 0.65,
+      kx + s * 0.05, ky - s * 0.4,
+      kx - s * 0.02, ky - s * 0.22
+    );
+    hitCtx.stroke();
+
+    // --- Handle inner walls (the loop at top-right) ---
+    hitCtx.lineWidth = 5;
+    // Inner curve of handle
+    hitCtx.beginPath();
+    hitCtx.moveTo(kx + s * 0.35, ky - s * 0.82);
+    hitCtx.bezierCurveTo(
+      kx + s * 0.45, ky - s * 0.68,
+      kx + s * 0.45, ky - s * 0.4,
+      kx + s * 0.35, ky - s * 0.2
+    );
+    hitCtx.stroke();
+
+    const hitData = hitCtx.getImageData(0, 0, W, H).data;
+
+    function isOnText(px, py) {
+      const i = (py * W + px) * 4;
+      return hitData[i] > 128;
+    }
+
+    // Fill background
+    ctx.fillStyle = '#111';
+    ctx.fillRect(0, 0, W, H);
+
+    // Draw grid
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const cx = c * CELL + Math.floor(SQUARE / 2);
+        const cy = r * CELL + Math.floor(SQUARE / 2);
+        const onText = isOnText(cx, cy);
+
+        let v = onText ? FLASK_BASE_V : BG_V;
+
+        // Random bright cells (4% chance for bg, 15% for flask)
+        if (onText && Math.random() < 0.15) {
+          v = FLASK_BASE_V + Math.round(Math.random() * (ON_V - FLASK_BASE_V) * 0.7);
+        } else if (!onText && Math.random() < 0.04) {
+          v = BG_V + Math.round(Math.random() * 25);
+        }
+
+        ctx.fillStyle = `rgb(${v},${v},${v})`;
+        ctx.fillRect(c * CELL, r * CELL, SQUARE, SQUARE);
+      }
+    }
+
+    function download() {
+      const a = document.createElement('a');
+      a.download = 'alkera-ai-linkedin-banner.png';
+      a.href = canvas.toDataURL('image/png');
+      a.click();
+    }
+  </script>
+</body>
+</html>
