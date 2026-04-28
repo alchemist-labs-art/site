@@ -62,7 +62,7 @@ function createFlaskCells(ctx: CanvasRenderingContext2D, path: Path2D): FlaskCel
         brightness: initB,
         target: initB,
         speed: 0.02 + Math.random() * 0.03,
-        flipProb: 0.005 + Math.random() * 0.01,
+        flipProb: 0.02 + Math.random() * 0.03,
       }
     })
   )
@@ -75,7 +75,7 @@ function tickFlask(cells: FlaskCell[][]): void {
       if (!cell.isFlask) continue
       if (Math.random() < cell.flipProb) {
         cell.target = 0.4 + Math.random() * 0.6
-        cell.speed = 0.015 + Math.random() * 0.035
+        cell.speed = 0.03 + Math.random() * 0.06
       }
       cell.brightness += (cell.target - cell.brightness) * cell.speed
     }
@@ -119,7 +119,7 @@ function createBgCells(count: number, bgCols: number, bgRows: number): BgCell[] 
 
 function tickBg(cells: BgCell[], bgCols: number, bgRows: number): void {
   for (const cell of cells) {
-    if (Math.random() < 0.002) {
+    if (Math.random() < 0.008) {
       if (cell.target > 0.02) {
         cell.target = 0
       } else {
@@ -127,7 +127,7 @@ function tickBg(cells: BgCell[], bgCols: number, bgRows: number): void {
         cell.row = Math.floor(Math.random() * bgRows)
         cell.target = 0.08 + Math.random() * 0.10
       }
-      cell.speed = 0.003 + Math.random() * 0.007
+      cell.speed = 0.008 + Math.random() * 0.012
     }
     cell.brightness += (cell.target - cell.brightness) * cell.speed
   }
