@@ -1,6 +1,7 @@
 'use client'
 
-import { useEffect, useRef, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { createPortal } from 'react-dom'
 import { CANVAS_W, CANVAS_H, CELL, SQUARE, SVG_W, SVG_H, SVG_FLASK_PATH } from '@/src/flask'
 
 const BG_V: number = 22
@@ -207,9 +208,13 @@ function restoreState(
 export default function HeroSection(): ReactNode {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const placeholderRef = useRef<HTMLDivElement>(null)
+  const [mounted, setMounted] = useState<boolean>(false)
+
+  useEffect((): void => { setMounted(true) }, [])
 
   useEffect((): (() => void) => {
-    const canvas: HTMLCanvasElement = canvasRef.current!
+    if (!canvasRef.current) return (): void => {}
+    const canvas: HTMLCanvasElement = canvasRef.current
     const placeholder: HTMLDivElement = placeholderRef.current!
 
     const w: number = window.innerWidth
@@ -260,11 +265,14 @@ export default function HeroSection(): ReactNode {
       window.removeEventListener('pagehide', onSave)
       document.removeEventListener('visibilitychange', onVisibility)
     }
-  }, [])
+  }, [mounted])
 
   return (
     <>
-      <canvas ref={canvasRef} id="bg-canvas" />
+      {mounted && createPortal(
+        <canvas ref={canvasRef} id="bg-canvas" />,
+        document.body,
+      )}
       <main className="hero">
         <section className="flask-col">
           <div
