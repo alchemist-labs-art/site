@@ -46,8 +46,8 @@
           const px = c * CELL + SQUARE / 2;
           const dist = Math.abs(px - waveX);
           const wave = Math.max(0, 1 - dist / spread);
-          const bump = wave * (2 + Math.random() * 3) * dir;
-          const noise = (Math.random() - 0.5) * 2.5 * dir;
+          const bump = wave * (1.5 + Math.random() * 1.5) * dir;
+          const noise = (Math.random() - 0.5) * dir;
           const v = Math.round(dir > 0
             ? Math.max(baseV - 1, Math.min(baseV + 7, baseV + bump + noise))
             : Math.min(baseV + 1, Math.max(baseV - 7, baseV + bump + noise)));
@@ -57,8 +57,10 @@
         }
       }
 
-      ctx.filter = 'blur(6px)';
-      ctx.drawImage(canvas, 0, 0);
+      for (let i = 0; i < 3; i++) {
+        ctx.filter = 'blur(10px)';
+        ctx.drawImage(canvas, 0, 0);
+      }
       ctx.filter = 'none';
     }
 
