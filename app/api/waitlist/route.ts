@@ -42,12 +42,16 @@ export async function POST(request: Request): Promise<NextResponse> {
     }),
   })
 
-  const data = await res.json()
+  const text = await res.text()
+  let data: Record<string, unknown> = {}
+  try {
+    data = JSON.parse(text)
+  } catch { /* empty or non-JSON response */ }
 
   if (!res.ok) {
     const message = res.status === 409
       ? "You're already on the waitlist!"
-      : data.message || 'Something went wrong'
+      : (data.message as string) || 'Something went wrong'
     return NextResponse.json({ success: false, message }, { status: res.status })
   }
 
