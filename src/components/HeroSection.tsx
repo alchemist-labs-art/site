@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { CANVAS_W, CANVAS_H, CELL, SQUARE, SVG_W, SVG_H, SVG_FLASK_PATH } from '@/src/flask'
+import WaitlistForm from '@/src/components/WaitlistForm'
 
 const BG_V: number = 22
 const ON_V: number = 224
@@ -119,7 +120,7 @@ function createBgCells(count: number, bgCols: number, bgRows: number): BgCell[] 
 
 function tickBg(cells: BgCell[], bgCols: number, bgRows: number): void {
   for (const cell of cells) {
-    if (Math.random() < 0.008) {
+    if (Math.random() < 0.003) {
       if (cell.target > 0.02) {
         cell.target = 0
       } else {
@@ -127,7 +128,7 @@ function tickBg(cells: BgCell[], bgCols: number, bgRows: number): void {
         cell.row = Math.floor(Math.random() * bgRows)
         cell.target = 0.08 + Math.random() * 0.10
       }
-      cell.speed = 0.008 + Math.random() * 0.012
+      cell.speed = 0.004 + Math.random() * 0.006
     }
     cell.brightness += (cell.target - cell.brightness) * cell.speed
   }
@@ -284,8 +285,9 @@ export default function HeroSection(): ReactNode {
         <section className="info-col">
           <h1 className="wordmark">alkera ai</h1>
           <p className="description">
-            <strong>the next-generation ide for data</strong>
+            <strong>building the next-generation ide for data</strong>
           </p>
+          <WaitlistForm />
           <p className="contact">
             contact us at{' '}
             <a href="mailto:contact@alkera.ai">contact@alkera.ai</a>
