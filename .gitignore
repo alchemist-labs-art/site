@@ -4,4 +4,7 @@ out/
 .next/
 .idea/
 *.local
+.env
+.env.local
+.env.production
 .DS_Store

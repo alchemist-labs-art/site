@@ -74,6 +74,7 @@ body {
   flex-direction: column;
   justify-content: center;
   gap: 1rem;
+  text-align: left;
 }
 
 .wordmark {
@@ -101,6 +102,20 @@ body {
   font-size: 0.85rem;
   color: var(--text-dim);
   line-height: 1.5;
+}
+
+/* ── Accessibility ── */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 
 /* ── Waitlist form ── */
@@ -151,6 +166,11 @@ body {
 .waitlist-btn:hover {
   background: var(--text);
   color: #000;
+}
+
+.waitlist-msg {
+  color: var(--text-dim);
+  font-size: 0.8rem;
 }
 
 /* ── Contact ── */

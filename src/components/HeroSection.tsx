@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { CANVAS_W, CANVAS_H, CELL, SQUARE, SVG_W, SVG_H, SVG_FLASK_PATH } from '@/src/flask'
-import WaitlistForm from '@/src/components/WaitlistForm'
+import WaitlistForm from './WaitlistForm'
 
 const BG_V: number = 22
 const ON_V: number = 224
